@@ -31,13 +31,7 @@ These notes are **not beginner-friendly**. They assume a solid understanding of 
 
 ## 📋 Topics Covered
 
-Here's an overview of the topics included:
-
-Here is the table of contents for your README.md file, summarizing the main topics covered in each of the three JS notes files:
-
 ---
-
-# Table of Contents
 
 ## JS Day 1
 1. JavaScript Strict Mode
