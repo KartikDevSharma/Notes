@@ -33,30 +33,111 @@ These notes are **not beginner-friendly**. They assume a solid understanding of 
 
 Here's an overview of the topics included:
 
-1. **Advanced Functions**
-   - Closures
-   - Higher-Order Functions
-   - Currying and Partial Application
-2. **Object-Oriented JavaScript**
-   - Prototypes and Inheritance
-   - ES6 Classes
-   - Mixins
-3. **Asynchronous JavaScript**
-   - Promises
-   - Async/Await
-   - Advanced Event Loop Concepts
-4. **JavaScript Patterns**
-   - Module Pattern
-   - Singleton Pattern
-   - Observer Pattern
-5. **JavaScript in the Browser**
-   - DOM Manipulation
+Here is the table of contents for your README.md file, summarizing the main topics covered in each of the three JS notes files:
+
+---
+
+# Table of Contents
+
+## JS Day 1
+1. JavaScript Strict Mode
+2. JavaScript Functions
+3. Function Declaration vs Function Expression in JavaScript
+4. JavaScript Arrow Functions
+5. Calling Functions from Other Functions in JavaScript
+6. Function Review: Anatomy of Functions in JavaScript
+7. Introduction to Arrays in JavaScript
+8. Introduction to Objects in JavaScript
+9. Dot Notation vs. Bracket Notation in JavaScript
+10. Looping Arrays in JavaScript: Breaking and Continuing
+11. What is the DOM (Document Object Model)?
+12. Is DOM Part of JavaScript?
+
+## JS Day 2
+1. Selecting and Manipulating Elements in the DOM
+   - Introduction
+   - Selecting DOM Elements
+   - Manipulating DOM Elements
+   - Adding and Removing Elements
    - Event Handling
-   - Web APIs
-6. **Modern JavaScript Features**
-   - Destructuring
-   - Spread and Rest Operators
-   - Modules and Imports
+   - Traversing the DOM
+   - Working with Forms
+   - Summary
+2. Handling Click Events in JavaScript
+   - Introduction
+   - Basics of Click Events
+   - Adding Event Listeners
+   - Event Object
+   - Preventing Default Actions
+   - Stopping Event Propagation
+   - Event Delegation
+   - Removing Event Listeners
+   - Handling Click Events with Different Elements
+   - Advanced Click Event Handling
+   - Conclusion
+   - HTML Structure
+   - JavaScript Code
+   - Explanation of the JavaScript Code
+   - Summary
+   - HTML Structure
+   - CSS Styles
+   - JavaScript Code
+   - Explanation of the JavaScript Code
+   - Summary
+3. Handling Key Press Events in JavaScript
+   - Introduction
+   - Types of Keyboard Events
+   - Event Properties
+   - Adding Event Listeners
+   - Handling Specific Keys
+   - Preventing Default Actions
+   - Debouncing Key Events
+   - Using Key Events for Game Controls
+   - Listening for Key Events on Specific Elements
+   - Handling Key Combinations
+   - Conclusion
+4. JavaScript Overview: Key Features and Concepts
+   - High-Level
+   - Garbage Collected
+   - Interpreted or Just-in-Time Compiled
+   - Multi-Paradigm
+   - Prototype-Based Object-Oriented
+   - First-Class Functions
+   - Dynamic
+   - Single-Threaded
+   - Non-Blocking Event Loop
+   - Detailed Breakdown of Key Concepts
+
+## JS Day 3
+1. JavaScript Promises
+2. Using Promises in JavaScript
+3. JavaScript Promises: An In-Depth Look
+4. Creating Promises in JavaScript
+5. Chaining Promises in JavaScript
+6. Handling Errors in JavaScript Promises
+7. JavaScript async and await
+8. Combining async and await with Promises
+9. JavaScript Fetch API
+10. Using Fetch with async/await
+11. Error Handling in Fetch API
+12. Practical Examples with Fetch and Promises
+13. JavaScript Map Object
+14. Working with Maps in JavaScript
+15. JavaScript Set Object
+16. Working with Sets in JavaScript
+17. Comparing Arrays, Objects, Maps, and Sets
+18. Practical Applications of Maps and Sets
+19. JavaScript WeakMap and WeakSet
+20. Map Iteration in JavaScript
+21. Choosing the Right Data Structure in JavaScript
+22. Working with Strings in JavaScript
+23. Advanced String Manipulation
+24. Regular Expressions in JavaScript
+25. Practical String Operations
+
+---
+
+
 
 Each topic is designed to provide a quick yet thorough revision experience.
 
