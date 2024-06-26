@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Notes PDF Downloader</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/2.0.3/marked.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-4xl mx-auto bg-white rounded shadow-md p-6">
+        <h1 class="text-2xl font-bold mb-4">GitHub Notes PDF Downloader</h1>
+        <div id="repo-structure" class="mb-4"></div>
+        <button onclick="generatePDF()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Generate PDF</button>
+        <div id="error-message" class="text-red-500 mt-4"></div>
+        <div id="loading" class="hidden mt-4">Loading...</div>
+    </div>
+
+    <script>
+        const GITHUB_USERNAME = 'KartikDevSharma';
+        const REPO_NAME = 'Notes';
+        let selectedFolder = '';
+
+        async function fetchRepoStructure() {
+            showLoading(true);
+            try {
+                const response = await axios.get(`https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/git/trees/main?recursive=1`);
+                const tree = response.data.tree;
+                const structureHtml = generateStructureHtml(tree);
+                document.getElementById('repo-structure').innerHTML = structureHtml;
+            } catch (error) {
+                showError('Error fetching repo structure: ' + error.message);
+            }
+            showLoading(false);
+        }
+
+        function generateStructureHtml(tree) {
+            let html = '<ul class="list-disc pl-5">';
+            const folders = tree.filter(item => item.type === 'tree');
+            folders.forEach(item => {
+                html += `<li><label class="inline-flex items-center">
+                    <input type="radio" name="folder" value="${item.path}" onclick="selectFolder('${item.path}')" class="form-radio">
+                    <span class="ml-2">${item.path}</span>
+                </label></li>`;
+            });
+            html += '</ul>';
+            return html;
+        }
+
+        function selectFolder(folderPath) {
+            selectedFolder = folderPath;
+        }
+
+        async function generatePDF() {
+            if (!selectedFolder) {
+                showError('Please select a folder first.');
+                return;
+            }
+
+            showLoading(true);
+            try {
+                const files = await getFilesInFolder(selectedFolder);
+                const mdFiles = files.filter(file => file.name.endsWith('.md'));
+                let content = '';
+
+                for (const file of mdFiles) {
+                    const fileContent = await getFileContent(file.download_url);
+                    content += `# ${file.name}\n\n${fileContent}\n\n`;
+                }
+
+                const pdf = new jspdf.jsPDF();
+                const html = marked(content);
+                pdf.html(html, {
+                    callback: function (pdf) {
+                        pdf.save(`${selectedFolder.split('/').pop()}.pdf`);
+                        showLoading(false);
+                    },
+                    x: 10,
+                    y: 10
+                });
+            } catch (error) {
+                showError('Error generating PDF: ' + error.message);
+                showLoading(false);
+            }
+        }
+
+        async function getFilesInFolder(folderPath) {
+            const response = await axios.get(`https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/contents/${folderPath}`);
+            return response.data;
+        }
+
+        async function getFileContent(url) {
+            const response = await axios.get(url);
+            return response.data;
+        }
+
+        function showError(message) {
+            const errorElement = document.getElementById('error-message');
+            errorElement.textContent = message;
+            errorElement.classList.remove('hidden');
+        }
+
+        function showLoading(isLoading) {
+            const loadingElement = document.getElementById('loading');
+            if (isLoading) {
+                loadingElement.classList.remove('hidden');
+            } else {
+                loadingElement.classList.add('hidden');
+            }
+        }
+
+        fetchRepoStructure();
+    </script>
+</body>
+</html>
