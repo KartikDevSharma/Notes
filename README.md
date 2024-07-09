@@ -82,6 +82,3 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 If you find these notes helpful, consider giving this repo a star! It means a lot and helps others discover these resources.
 
-<p align="center">
-  Made with ❤️ by Kartik
-</p>
