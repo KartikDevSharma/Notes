@@ -5,7 +5,7 @@
 # 📚 My Programming & DevOps Notes
 
 Welcome to my personal knowledge base! This repository is a living collection of notes, insights, and resources I've gathered on various programming languages and DevOps tools. It's constantly evolving as I learn and grow in my tech journey.
-<img align="right"  width="40%" src="https://github.com/KartikDevSharma/KartikDevSharma/blob/main/Files/tachstack.gif">
+<img align="right"  width="30%" src="https://github.com/KartikDevSharma/KartikDevSharma/blob/main/Files/tachstack.gif">
 ## 🗂️ Table of Contents
 - [Python](#python)
 - [JavaScript](#javascript)
