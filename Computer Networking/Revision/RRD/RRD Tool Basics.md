@@ -377,151 +377,188 @@ This fetches the average incoming and outgoing traffic for the past day.
 
 ---
 
-### Day 12-14: Updating and Fetching Data in RRDs
+### Day 12-14: Updating and Fetching Data
 
-#### What is an RRD?
-RRD stands for **Round-Robin Database**, a type of database designed for storing and retrieving time-series data (such as CPU load, temperature, etc.). It is commonly used in monitoring tools like Cacti and MRTG. An RRD stores data in a fixed-size database, ensuring that it doesn’t grow in size over time, and older data is overwritten by newer data in a circular fashion.
 
-### Objective:
-1. **Update RRDs with random data**: You will learn to insert random or real-time data into an RRD.
-2. **Fetch data from RRDs**: After populating your RRD, you'll practice fetching the data and displaying it.
-3. **Practice data retrieval and basic analysis**: Extract and analyze the time-series data you have stored.
-
-#### Tools Required:
-- **rrdtool**: The RRD tool, which is the command-line tool to interact with RRDs.
-  - You can install it via package managers, for example:  
-    ```bash
-    sudo apt-get install rrdtool
-    ```
 
 ---
 
-### Step 1: Creating an RRD
+### 1. **Updating RRDs with Data**
 
-Before you can update or fetch data, you need to create an RRD file. The structure of the database needs to be defined, including things like the **data sources** (DS) and **round-robin archives** (RRA). For this example, let’s say we’re going to store random temperature data every minute.
+RRDtool is designed to store time series data efficiently. To keep your database updated, you need to regularly add new data to it using the `rrdtool update` command. Data can be updated manually or through automated scripts that gather and inject data into the RRD.
 
+#### **The `update` Command**:
+The `update` command inserts new values into your RRD.
+
+#### **Syntax**:
 ```bash
-rrdtool create temperature.rrd \
---start now \
---step 60 \
-DS:temp:GAUGE:120:-50:50 \
-RRA:AVERAGE:0.5:1:1440 \
-RRA:MIN:0.5:12:1440 \
-RRA:MAX:0.5:12:1440
+rrdtool update <filename.rrd> <timestamp>:<value1>:<value2>:...
 ```
 
-- **--start now**: Start collecting data from the current time.
-- **--step 60**: Record data every 60 seconds (1 minute).
-- **DS:temp:GAUGE:120:-50:50**: Define a data source (DS) named `temp` that will collect **gauge** data (i.e., can increase or decrease) with a heartbeat of 120 seconds (you allow up to 120 seconds between updates), and the valid range is -50 to 50.
-- **RRA:AVERAGE:0.5:1:1440**: Define an archive that stores the **average** value over 1 minute for the last 1440 minutes (1 day).
-- **RRA:MIN, MAX**: Additionally, store the minimum and maximum values over 12-minute periods for the same time span.
+- **filename.rrd**: The name of your RRD file.
+- **timestamp**: A UNIX timestamp representing the time of the update (use `N` for "now").
+- **value1, value2, ...**: The data values for each data source in the RRD.
 
----
-
-### Step 2: Updating the RRD with Random Data
-
-Now that you have created the RRD, you can update it with random data. You can use a shell script to simulate this process, or run individual commands manually.
-
-#### Example: Update with a single data point
-To update the RRD with a temperature reading (e.g., 25°C) at the current time:
+#### **Example**:
+Let’s say you have an RRD that tracks **CPU load** and **memory usage** with two data sources (`cpu_load` and `memory_usage`). Here’s how you can update the database:
 
 ```bash
-rrdtool update temperature.rrd N:25
+rrdtool update system_stats.rrd N:15:65
 ```
 
-- **N**: Indicates that the timestamp is "now", and **25** is the value being stored for temperature.
+This command updates the RRD with current values:
+- **N**: The timestamp for "now."
+- **15**: The CPU load value.
+- **65**: The memory usage value.
 
-#### Example: Update with random data (using a script)
+#### **Script to Update RRD with Random Data**:
+For testing purposes, you can use a script to generate random data and feed it into your RRD.
 
-Here’s a simple bash script that updates the RRD with a random temperature between -20°C and 40°C every minute.
+Here’s an example **Bash** script to do this:
 
 ```bash
 #!/bin/bash
-for i in {1..60}  # Run for 60 minutes (you can increase this if needed)
-do
-  temp=$(( RANDOM % 60 - 20 ))  # Generate random number between -20 and 40
-  rrdtool update temperature.rrd N:$temp  # Update RRD with random temperature
-  sleep 60  # Wait for 60 seconds before the next update
+
+# Path to your RRD file
+RRD_FILE="system_stats.rrd"
+
+# Loop to update the RRD every 5 minutes (300 seconds)
+while true; do
+  # Generate random data for CPU load and memory usage
+  cpu_load=$(shuf -i 10-90 -n 1)  # Random value between 10 and 90
+  memory_usage=$(shuf -i 30-90 -n 1)  # Random value between 30 and 90
+
+  # Update the RRD with the current timestamp and random values
+  rrdtool update $RRD_FILE N:$cpu_load:$memory_usage
+
+  echo "Updated RRD with CPU load: $cpu_load, Memory usage: $memory_usage"
+
+  # Wait for 5 minutes before the next update
+  sleep 300
 done
 ```
 
-Save this script as `update_rrd.sh`, make it executable (`chmod +x update_rrd.sh`), and run it (`./update_rrd.sh`). This script will update the RRD for 60 minutes with random data every minute.
+- **`shuf`**: Generates random numbers between specified ranges (e.g., 10-90 for CPU load).
+- **`sleep 300`**: Pauses the script for 5 minutes (300 seconds) between updates.
+
+You can modify this script to include more or fewer data sources, and change the data ranges to match the metrics you’re monitoring.
 
 ---
 
-### Step 3: Fetching Data from the RRD
+### 2. **Fetching Data from RRDs**
 
-Once you have stored data in the RRD, you can retrieve it using the `rrdtool fetch` command.
+Once your RRD is regularly updated with data, you can retrieve that data using the `fetch` command.
 
-#### Fetching Data
+#### **The `fetch` Command**:
+The `fetch` command retrieves data from the RRD for a specified time range and consolidation function (e.g., `AVERAGE`, `MAX`, `MIN`, etc.).
 
-To fetch data from your RRD for analysis, you can use the following command:
+#### **Syntax**:
+```bash
+rrdtool fetch <filename.rrd> <consolidation function> --start <start time> --end <end time>
+```
+
+- **filename.rrd**: The name of the RRD file.
+- **consolidation function**: Can be `AVERAGE`, `MIN`, `MAX`, or `LAST`.
+- **start time / end time**: The time range for the data retrieval (you can use UNIX timestamps or relative times like `-1d` for the past day).
+
+#### **Example**:
+Fetching the average values of CPU load and memory usage for the past 24 hours:
 
 ```bash
-rrdtool fetch temperature.rrd AVERAGE --start -1h --end now
+rrdtool fetch system_stats.rrd AVERAGE --start -1d --end now
 ```
 
-- **AVERAGE**: Retrieves the average temperature values stored in the RRD.
-- **--start -1h**: Fetch data starting 1 hour ago.
-- **--end now**: Fetch data up until now.
-
-The result will be a time-stamped list of values:
-
-```
-timestamp                temp
-1609459200:              nan
-1609459260:              23.4
-1609459320:              22.9
-1609459380:              nan
+Output example:
+```bash
+                      cpu_load       memory_usage
+1609459200:  12.345678e+00  65.432100e+00
+1609462800:  15.678912e+00  67.891234e+00
 ...
 ```
+The output shows the **timestamp** followed by the **average values** of `cpu_load` and `memory_usage` during each time step.
 
-In this output:
-- `1609459200` is the Unix timestamp (representing the date and time).
-- The value (e.g., `23.4`) is the recorded temperature. `nan` means no data was recorded at that time.
-
----
-
-### Step 4: Data Retrieval and Basic Analysis
-
-Once you have fetched the data, you can perform some basic analysis, such as calculating averages, identifying trends, or visualizing the data.
-
-#### Example: Calculate the Average of the Last Hour
-
-After fetching the data, you can process it using a tool like **awk**, **Python**, or any programming language.
-
-Here’s a simple example using **awk** to calculate the average temperature over the last hour:
-
-```bash
-rrdtool fetch temperature.rrd AVERAGE --start -1h --end now | awk '{sum+=$2; count++} END {print "Average temp: ", sum/count}'
-```
-
-#### Visualization (Optional)
-
-One of the key features of **RRDtool** is that it can easily generate graphs of your data. You can create a graph from the data in the RRD using the following command:
-
-```bash
-rrdtool graph temperature.png \
---start -1h \
---end now \
-DEF:temp=temperature.rrd:temp:AVERAGE \
-LINE2:temp#FF0000:"Temperature"
-```
-
-- This command creates a graph (`temperature.png`) that visualizes the temperature over the past hour.
-- **LINE2:temp#FF0000** draws the temperature data with a red line.
-
-You can then open `temperature.png` to see the visual representation of the data.
+#### **Start and End Times**:
+- `--start -1d`: This fetches data starting from 1 day ago (relative time).
+- `--end now`: This fetches data until the current time.
+- You can also use absolute timestamps for more precise control, like `--start 1609459200 --end 1609545600`.
 
 ---
 
-### Recap:
+### 3. **Basic Data Analysis with RRDtool**
 
-1. **Create an RRD**: Define data sources and archives for storing your time-series data.
-2. **Update the RRD**: Insert random (or real) data points into the RRD at regular intervals using the `rrdtool update` command.
-3. **Fetch Data**: Use `rrdtool fetch` to retrieve the stored data and view it as time-stamped values.
-4. **Basic Analysis**: Use command-line tools like `awk` or scripting languages to analyze the fetched data (e.g., calculating averages).
-5. **Visualize Data**: Optionally, create graphs from your data using `rrdtool graph`.
+Once you have fetched the data, you can perform basic analysis directly or integrate it into other tools for more complex analysis.
+
+#### **Analyzing Output**:
+Here’s an example of how to fetch and analyze data using a **Bash script**.
+
+##### **Step-by-Step Guide**:
+1. **Fetch Data**: Use the `fetch` command to retrieve data for the last day.
+2. **Analyze the Data**: Use tools like `awk`, `grep`, or other Linux utilities to analyze the output.
+
+#### **Script for Fetching and Analyzing Data**:
+
+```bash
+#!/bin/bash
+
+# Path to your RRD file
+RRD_FILE="system_stats.rrd"
+
+# Fetch average values for the past 24 hours
+rrdtool fetch $RRD_FILE AVERAGE --start -1d --end now > fetched_data.txt
+
+# Basic analysis: calculate the average CPU load and memory usage over the last day
+cpu_total=0
+memory_total=0
+count=0
+
+while read -r timestamp cpu_load memory_usage; do
+  if [[ $cpu_load != "nan" ]]; then
+    cpu_total=$(echo "$cpu_total + $cpu_load" | bc)
+    memory_total=$(echo "$memory_total + $memory_usage" | bc)
+    count=$((count + 1))
+  fi
+done < fetched_data.txt
+
+if [[ $count -gt 0 ]]; then
+  avg_cpu=$(echo "$cpu_total / $count" | bc -l)
+  avg_memory=$(echo "$memory_total / $count" | bc -l)
+  echo "Average CPU load over last 24 hours: $avg_cpu"
+  echo "Average memory usage over last 24 hours: $avg_memory"
+else
+  echo "No valid data points available."
+fi
+```
+
+Explanation:
+- The script fetches data for the last 24 hours and stores it in `fetched_data.txt`.
+- It then reads each line of the file, checks for non-`NaN` values, sums them up, and calculates the average CPU load and memory usage.
+
+#### **Exercise**:
+1. **Write a Script to Fetch Maximum Values**: Modify the script to fetch and analyze the maximum CPU load and memory usage over the last 24 hours using the `MAX` consolidation function.
+   
+2. **Generate Graphs**: Once you have fetched and analyzed the data, you can use RRDtool’s graphing feature to visualize the trends over time (you’ll explore this in later days).
+
+---
+
+### 4. **Practice: Automate Data Updates and Fetching**
+
+To solidify your understanding, practice the following exercises:
+
+#### **Exercise 1: Update RRD with Random Data Every 5 Minutes**:
+- Write a script to update the RRD every 5 minutes with random values for CPU load and memory usage, similar to the example above.
+- Run the script in the background and let it collect data over the course of a day.
+
+#### **Exercise 2: Fetch Data for Different Time Ranges**:
+- Fetch data for different time periods, such as the last 2 hours, the last 7 days, or a specific time range using absolute timestamps.
+- Use `AVERAGE`, `MAX`, and `MIN` consolidation functions to see how the data is consolidated differently.
+
+#### **Exercise 3: Analyze Data**:
+- Write a script that calculates the average, maximum, and minimum values over the last 24 hours for both CPU load and memory usage.
+- Experiment with fetching data at different resolutions and analyze how the trends change over time.
+
+---
+
+
 
 
 
