@@ -613,7 +613,7 @@ LINE1:out#0000FF:"Outgoing Traffic"
   Draws a line for the incoming traffic in green.
 - **LINE1:out#0000
 
-FF:"Outgoing Traffic"**:  
+FF:**"Outgoing Traffic"**:  
   Draws a line for the outgoing traffic in blue.
 
 The result is a graph showing network traffic over the past hour, with incoming and outgoing traffic displayed as lines.
