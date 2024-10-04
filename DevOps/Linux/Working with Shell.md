@@ -194,3 +194,333 @@ To make aliases persistent, you can add them to your `~/.bashrc` file.
 ### Conclusion
 
 Understanding the Linux shell is essential for working effectively in a Linux environment. Whether you're executing simple commands, writing scripts to automate tasks, or managing processes, the shell is a powerful tool that can significantly enhance your productivity. With practice, you'll become more comfortable using the command line and leveraging the many features of the shell.
+
+---
+
+## Basic Linux Commands
+
+### Overview
+
+Linux, like other Unix-based operating systems, is highly dependent on the command line. While Linux provides graphical user interfaces (GUIs), many tasks, particularly those related to system administration and programming, are more efficiently done through the **command line interface (CLI)**. To get the most out of Linux, it’s essential to understand some basic commands. These commands allow users to navigate the filesystem, manipulate files, manage processes, and more.
+
+---
+
+### Key Concepts
+
+Before we dive into specific commands, it’s important to understand the basic components of a Linux command:
+
+- **Command**: This is the executable or program you're invoking.
+- **Options/Flags**: These modify the behavior of the command. They are typically prefixed by a single dash (`-`) for short options or two dashes (`--`) for long options.
+- **Arguments**: These are inputs to the command, usually file or directory names.
+
+For example:
+```bash
+ls -l /home
+```
+- `ls`: command
+- `-l`: option (long listing format)
+- `/home`: argument (directory to list)
+
+---
+
+### Basic Commands for Navigation and Filesystem Operations
+
+#### 1. `pwd` – Print Working Directory
+- **Purpose**: Shows the current directory you're working in.
+- **Usage**:
+  ```bash
+  pwd
+  ```
+  Example output:
+  ```bash
+  /home/user
+  ```
+- **Explanation**: When you log into the terminal, you’re in a directory. The `pwd` command tells you where you are in the directory structure.
+
+#### 2. `ls` – List Directory Contents
+- **Purpose**: Lists files and directories in your current or specified directory.
+- **Usage**:
+  ```bash
+  ls
+  ```
+  - List in detail:
+    ```bash
+    ls -l
+    ```
+  - List hidden files (files starting with a dot):
+    ```bash
+    ls -a
+    ```
+  - List files and directories with human-readable sizes:
+    ```bash
+    ls -lh
+    ```
+- **Explanation**: The `ls` command shows the contents of a directory. Options like `-l` provide additional information such as permissions, file size, owner, and modification time.
+
+#### 3. `cd` – Change Directory
+- **Purpose**: Navigates to a different directory.
+- **Usage**:
+  ```bash
+  cd /path/to/directory
+  ```
+  - Navigate to the home directory:
+    ```bash
+    cd ~
+    ```
+  - Navigate one directory up:
+    ```bash
+    cd ..
+    ```
+- **Explanation**: The `cd` command changes the current working directory to the one specified. `..` moves up one directory, while `~` takes you to your home directory.
+
+#### 4. `mkdir` – Make Directory
+- **Purpose**: Creates a new directory.
+- **Usage**:
+  ```bash
+  mkdir new_directory
+  ```
+  - Create multiple directories at once:
+    ```bash
+    mkdir dir1 dir2 dir3
+    ```
+  - Create a parent directory along with subdirectories:
+    ```bash
+    mkdir -p parent/child/grandchild
+    ```
+- **Explanation**: `mkdir` is used to create new directories. The `-p` flag allows creating nested directories.
+
+#### 5. `rmdir` – Remove Directory
+- **Purpose**: Removes an empty directory.
+- **Usage**:
+  ```bash
+  rmdir empty_directory
+  ```
+  - Remove multiple directories:
+    ```bash
+    rmdir dir1 dir2
+    ```
+- **Explanation**: This command only works for empty directories. For directories with files, use `rm` with the `-r` option.
+
+#### 6. `rm` – Remove Files or Directories
+- **Purpose**: Deletes files or directories.
+- **Usage**:
+  ```bash
+  rm file.txt
+  ```
+  - Delete a directory and its contents:
+    ```bash
+    rm -r directory
+    ```
+  - Force delete without prompt:
+    ```bash
+    rm -rf directory
+    ```
+- **Explanation**: The `rm` command removes files and directories. The `-r` flag is needed to delete directories recursively. The `-f` option forces the deletion without asking for confirmation.
+
+#### 7. `touch` – Create a New Empty File
+- **Purpose**: Creates an empty file or updates the timestamp of an existing file.
+- **Usage**:
+  ```bash
+  touch newfile.txt
+  ```
+- **Explanation**: `touch` is commonly used to create new, empty files. If the file already exists, it updates the last modified time.
+
+#### 8. `cp` – Copy Files or Directories
+- **Purpose**: Copies files or directories from one location to another.
+- **Usage**:
+  ```bash
+  cp source.txt destination.txt
+  ```
+  - Copy a directory and its contents:
+    ```bash
+    cp -r source_directory destination_directory
+    ```
+- **Explanation**: The `cp` command copies files. The `-r` flag allows you to copy directories and their contents.
+
+#### 9. `mv` – Move or Rename Files/Directories
+- **Purpose**: Moves or renames files or directories.
+- **Usage**:
+  - Move a file:
+    ```bash
+    mv file.txt /new_location/
+    ```
+  - Rename a file:
+    ```bash
+    mv oldname.txt newname.txt
+    ```
+- **Explanation**: `mv` can either move files from one location to another or rename files and directories.
+
+---
+
+### Basic Commands for Viewing and Editing Files
+
+#### 10. `cat` – Concatenate and Display File Content
+- **Purpose**: Displays the content of a file.
+- **Usage**:
+  ```bash
+  cat file.txt
+  ```
+  - Concatenate multiple files and display their content:
+    ```bash
+    cat file1.txt file2.txt
+    ```
+- **Explanation**: `cat` reads and displays the contents of files. It’s also used to combine files.
+
+#### 11. `nano` – Simple Text Editor
+- **Purpose**: Opens the nano text editor.
+- **Usage**:
+  ```bash
+  nano file.txt
+  ```
+- **Explanation**: Nano is a beginner-friendly command-line text editor. Use the arrow keys to navigate and `Ctrl + X` to exit.
+
+#### 12. `head` and `tail` – View Start or End of a File
+- **Purpose**: Displays the first or last lines of a file.
+- **Usage**:
+  - View the first 10 lines of a file:
+    ```bash
+    head file.txt
+    ```
+  - View the last 10 lines of a file:
+    ```bash
+    tail file.txt
+    ```
+  - Tail a file in real-time:
+    ```bash
+    tail -f file.txt
+    ```
+- **Explanation**: `head` displays the beginning, and `tail` shows the end of a file. The `-f` option with `tail` is used for monitoring logs in real-time.
+
+#### 13. `grep` – Search Text in Files
+- **Purpose**: Searches for patterns within a file or output.
+- **Usage**:
+  ```bash
+  grep "search_term" file.txt
+  ```
+  - Search recursively in directories:
+    ```bash
+    grep -r "search_term" directory/
+    ```
+- **Explanation**: `grep` looks for specified patterns in files or outputs and displays the matching lines.
+
+---
+
+### Commands for File Permissions
+
+#### 14. `chmod` – Change File Permissions
+- **Purpose**: Changes the read, write, and execute permissions of files or directories.
+- **Usage**:
+  ```bash
+  chmod 755 script.sh
+  ```
+  - Give read and write permissions to the owner:
+    ```bash
+    chmod u+rw file.txt
+    ```
+  - Remove write permission from the group:
+    ```bash
+    chmod g-w file.txt
+    ```
+- **Explanation**: Permissions in Linux are divided into three parts: owner, group, and others. `chmod` is used to modify these permissions.
+
+#### 15. `chown` – Change File Owner and Group
+- **Purpose**: Changes the owner or group of a file.
+- **Usage**:
+  ```bash
+  chown newuser:newgroup file.txt
+  ```
+  - Change the owner only:
+    ```bash
+    chown newuser file.txt
+    ```
+- **Explanation**: `chown` is used to change the owner or group of a file.
+
+---
+
+### System Monitoring and Process Management Commands
+
+#### 16. `ps` – Display Running Processes
+- **Purpose**: Shows a list of currently running processes.
+- **Usage**:
+  ```bash
+  ps
+  ```
+  - Show more detailed information:
+    ```bash
+    ps aux
+    ```
+- **Explanation**: `ps` lists active processes. The `aux` option provides more details, like user, CPU usage, memory usage, and command.
+
+#### 17. `top` – Real-Time Process Monitoring
+- **Purpose**: Displays a real-time view of system processes.
+- **Usage**:
+  ```bash
+  top
+  ```
+- **Explanation**: `top` shows active processes in real-time, along with system resource usage like CPU and memory.
+
+#### 18. `kill` – Terminate a Process
+- **Purpose**: Sends a signal to terminate a process.
+- **Usage**:
+  - Find the process ID using `ps` or `top`.
+  - Then terminate the process
+
+:
+    ```bash
+    kill pid
+    ```
+  - Force terminate a process:
+    ```bash
+    kill -9 pid
+    ```
+- **Explanation**: `kill` sends termination signals to processes using their process ID (PID). The `-9` flag forcefully kills the process.
+
+#### 19. `df` – Check Disk Space Usage
+- **Purpose**: Displays available disk space.
+- **Usage**:
+  ```bash
+  df -h
+  ```
+- **Explanation**: `df` shows the disk usage of file systems in human-readable form with the `-h` flag.
+
+#### 20. `du` – Check Directory/File Size
+- **Purpose**: Displays the size of a directory or file.
+- **Usage**:
+  ```bash
+  du -h /path/to/directory
+  ```
+  - Show summary of the total size:
+    ```bash
+    du -sh /path/to/directory
+    ```
+- **Explanation**: `du` is used to check the size of files and directories. The `-h` flag displays sizes in human-readable formats (KB, MB, etc.).
+
+---
+
+### Network Commands
+
+#### 21. `ping` – Test Network Connectivity
+- **Purpose**: Checks if a remote server is reachable.
+- **Usage**:
+  ```bash
+  ping google.com
+  ```
+- **Explanation**: `ping` sends ICMP echo requests to test connectivity to another host.
+
+#### 22. `ifconfig` / `ip` – Configure Network Interfaces
+- **Purpose**: Displays or configures network interfaces.
+- **Usage**:
+  ```bash
+  ifconfig
+  ```
+  or
+  ```bash
+  ip addr
+  ```
+- **Explanation**: `ifconfig` or `ip addr` shows network interfaces, IP addresses, and other networking details.
+
+---
+
+### Conclusion
+
+Understanding these basic Linux commands is crucial for working efficiently in the Linux environment. These commands form the foundation of more advanced tasks such as system administration, automation with scripts, and performance tuning. With practice, you'll become comfortable with the Linux command line and be able to perform complex tasks with ease.
