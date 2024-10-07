@@ -142,6 +142,20 @@ A **proxy server** is a device that acts as an intermediary between a client and
 
 Understanding these devices is fundamental in preparing for CCNA and working with real-world networks. These devices play critical roles in maintaining communication, performance, and security within both small and large-scale networks.
 
+| Device | OSI Layer | Primary Function | Key Distinguishing Features |
+|--------|-----------|------------------|---------------------------|
+| Router | Layer 3 | Connects multiple networks | Uses IP addresses, routing tables |
+| Switch | Layer 2 | Connects devices within same network | Uses MAC addresses, supports VLANs |
+| Hub | Layer 1 | Connects devices (obsolete) | Broadcasts to all ports, half-duplex |
+| Bridge | Layer 2 | Connects network segments | Reduces traffic between segments |
+| Gateway | Layer 3+ | Connects dissimilar networks | Protocol conversion |
+| Access Point | Layer 2 | Provides wireless access | Extends wired network wirelessly |
+| Firewall | Layer 3-7 | Network security | Filters traffic based on rules |
+| Modem | Layer 1-2 | Connects to internet | Modulates/demodulates signals |
+| Load Balancer | Layer 4-7 | Distributes traffic | Balances load across servers |
+| NIC | Layer 2 | Connects device to network | Has unique MAC address |
+| Repeater | Layer 1 | Extends signal range | Amplifies and regenerates signals |
+| Proxy Server | Layer 7 | Intermediary for requests | Caching, anonymity, content filtering |
 
 ---
 
