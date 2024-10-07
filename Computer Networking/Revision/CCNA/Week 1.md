@@ -2127,10 +2127,21 @@ Grasping these foundational networking concepts is essential for success in the 
 
 ---
 
+![image](https://github.com/KartikDevSharma/Resources/blob/main/Images/Arp%20broadCast.png)
+
+Both switches have an empty MAC address table, and all PCs have an empty ARP table.
+1. If PC1 pings to PC3, what messages will be sent over the network, and which devices will receive them?
+2. Send the ping and use Packet Tracer's 'simulation mode' to verify your answer.
+3. Use pings to generate network traffic and allow the switches to learn the MAC addresses of all PCs on the network.
+4. Use 'show' commands on the switches to identify the MAC address of each PC.
+5. Clear the dynamic MAC addresses from the MAC address table of each switch.
+
+
+
 Let’s break down the steps and questions one by one to understand what’s happening in this scenario and how the network operates when PC1 pings PC3. This involves understanding **ARP**, **MAC address learning**, and the behavior of switches and devices in this network.
 
 ---
-
+![Image2](https://github.com/KartikDevSharma/Resources/blob/main/Images/Screenshot%202024-10-07%20122007.png)
 ### **1. If PC1 pings PC3, what messages will be sent over the network, and which devices will receive them?**
 
 #### **Step-by-step breakdown of the process:**
