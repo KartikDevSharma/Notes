@@ -421,26 +421,201 @@ Once the kernel and initramfs have done their job, the kernel takes control of t
 
 ### **6. init/Systemd Process**
 
-The **init** or **systemd** process is the first user-space process started by the kernel. It is responsible for launching system services, initializing the user environment, and setting up the overall operating environment.
+### **Linux Kernel: Run Levels - A Comprehensive Guide for Beginners**
 
-- **init**: The traditional init system used by many older Linux distributions. It reads configuration from `/etc/inittab` to determine what services and processes to start.
-  
-- **systemd**: The more modern replacement for init. It is widely used in most modern Linux distributions like Ubuntu, CentOS, Fedora, and Debian.
-  - **systemd** improves boot performance by parallelizing service startups and managing dependencies between them.
-  - The main systemd process has **PID 1**, and it reads configuration files from `/etc/systemd/` to start services.
+**Introduction:**
+In Linux, **run levels** are a concept used to define the different modes of operation that a system can be in, primarily to determine which services or processes are running at any given time. Run levels were traditionally used in **SysV init** systems, and although most modern Linux distributions use **systemd**, understanding run levels is still important for Linux administration, especially for older systems and understanding the equivalent **targets** in systemd.
 
-- **Runlevels/Targets**:
-  - **init** systems use runlevels to define what services are started. Common runlevels include:
-    - **Runlevel 1**: Single-user mode (used for maintenance).
-    - **Runlevel 3**: Multi-user mode with networking.
-    - **Runlevel 5**: Multi-user mode with GUI.
-  - **systemd** uses **targets** (like `multi-user.target` or `graphical.target`) instead of runlevels.
+This guide will explain the concept of run levels, how they work in SysV init systems, and how they have been replaced by targets in systemd.
 
-You can check the current runlevel/target:
+---
+
+### **What Are Run Levels?**
+
+Run levels represent different states or modes of operation for a Linux system. Each run level determines what services and processes are started or stopped, such as whether the system boots into a **graphical interface** or stays in **multi-user mode** without a GUI. 
+
+Each run level is represented by a number (or identifier) and dictates which set of services should be running in that mode.
+
+### **Traditional SysV Init Run Levels**
+
+In **SysV init**-based systems (which were commonly used in older Linux distributions), the system boots into a specific run level, defined by a number between 0 and 6. Each run level corresponds to a particular system state.
+
+Here are the traditional run levels and their meanings:
+
+| **Run Level** | **Description**                                                        |
+|---------------|------------------------------------------------------------------------|
+| 0             | **Halt**: Shuts down the system.                                       |
+| 1             | **Single-User Mode**: Used for maintenance, only root user can log in. |
+| 2             | **Multi-User Mode** (without networking): Multiple users can log in, but no networking. |
+| 3             | **Multi-User Mode** (with networking): Multiple users can log in, networking enabled (used on servers). |
+| 4             | **Unused**: Historically left unused for custom configurations.        |
+| 5             | **Graphical Mode**: Boots into the graphical user interface (GUI).     |
+| 6             | **Reboot**: Reboots the system.                                        |
+
+### **Detailed Overview of Run Levels**
+
+#### **Run Level 0: Halt**
+- This run level halts the system, effectively shutting it down.
+- When a system enters run level 0, it powers down all hardware components, stops services, and shuts off the machine.
+- This is typically the run level used when you issue a shutdown command like `sudo shutdown -h now`.
+
+#### **Run Level 1: Single-User Mode**
+- Single-user mode is used for system maintenance.
+- Only the root user has access, and no other user can log in.
+- It’s commonly used for repairing disk issues or troubleshooting boot problems, as no network services are started.
+- The system boots into a minimal environment with only essential services running.
+- To boot into single-user mode, you can modify the kernel parameters in the GRUB bootloader by adding `single` or use the command:
+  ```bash
+  sudo init 1
+  ```
+
+#### **Run Level 2: Multi-User Mode (Without Networking)**
+- In this mode, multiple users can log in and use the system, but no networking services are started.
+- It’s rarely used in modern environments since networking is almost always needed.
+
+#### **Run Level 3: Multi-User Mode (With Networking)**
+- This is a common mode for Linux servers.
+- In run level 3, multiple users can log in, and the network is active.
+- No graphical environment is started, so you remain in a command-line interface (CLI).
+- This is ideal for servers or systems that don’t require a graphical interface.
+- You can switch to run level 3 by running:
+  ```bash
+  sudo init 3
+  ```
+
+#### **Run Level 4: Custom/Unused**
+- This run level was historically left unused, giving administrators the flexibility to create a custom run level.
+- It can be configured to launch specific services or tasks.
+
+#### **Run Level 5: Graphical Mode**
+- This run level starts the system with a graphical user interface (GUI), making it suitable for desktop environments.
+- It is the default run level for most desktop Linux distributions.
+- The system starts the X server and launches a display manager (such as `gdm`, `lightdm`, or `sddm`) that allows users to log in via a graphical interface.
+
+#### **Run Level 6: Reboot**
+- Run level 6 reboots the system.
+- When the system enters run level 6, all processes are stopped, and the system restarts.
+- This is typically what happens when you issue a `sudo reboot` command.
+
+---
+
+### **Changing Run Levels in SysV Init**
+
+To change the run level of a system manually, you can use the **`init`** or **`telinit`** commands. Both commands tell the system to switch to a specific run level.
+
+For example, to switch to run level 3 (multi-user mode with networking), you can run:
+
 ```bash
-runlevel       # For init systems
-systemctl get-default   # For systemd systems
+sudo init 3
 ```
+
+Or:
+
+```bash
+sudo telinit 3
+```
+
+The current run level can be checked using the `runlevel` command:
+
+```bash
+runlevel
+```
+
+---
+
+### **Systemd and Targets: Modern Equivalent of Run Levels**
+
+In modern Linux distributions that use **systemd** (such as Ubuntu, Fedora, and CentOS), the concept of run levels has been replaced by **targets**. Targets are more flexible and allow for better management of services during system startup.
+
+Here’s a mapping of traditional run levels to systemd targets:
+
+| **SysV Init Run Level** | **Systemd Target**                 | **Description**                           |
+|-------------------------|------------------------------------|-------------------------------------------|
+| 0                       | `poweroff.target`                  | Shuts down the system.                    |
+| 1                       | `rescue.target`                    | Single-user mode (maintenance).           |
+| 2, 3, 4                 | `multi-user.target`                | Multi-user mode with networking (non-GUI).|
+| 5                       | `graphical.target`                 | Multi-user mode with GUI.                 |
+| 6                       | `reboot.target`                    | Reboots the system.                       |
+
+### **How to Work with systemd Targets**
+
+- **Check Current Target**: You can check the current target (similar to checking the run level) using:
+  ```bash
+  systemctl get-default
+  ```
+
+- **Change Target**: To switch to a different target, you can use the `systemctl isolate` command. For example, to switch to graphical mode:
+  ```bash
+  sudo systemctl isolate graphical.target
+  ```
+
+- **Set Default Target**: To set a default target (the one the system boots into), use the `systemctl set-default` command:
+  ```bash
+  sudo systemctl set-default multi-user.target
+  ```
+
+### **Common Systemd Targets**
+
+- **`rescue.target`**: Equivalent to run level 1 (single-user mode).
+- **`multi-user.target`**: Equivalent to run level 3 (multi-user mode with networking).
+- **`graphical.target`**: Equivalent to run level 5 (graphical mode).
+- **`poweroff.target`**: Shuts down the system.
+- **`reboot.target`**: Reboots the system.
+
+You can list all available targets by running:
+
+```bash
+systemctl list-units --type=target
+```
+
+---
+
+### **Differences Between Run Levels and Targets**
+
+- **Flexibility**: While run levels were fixed, targets allow system administrators to define new, custom targets and dependencies between them.
+- **Parallel Service Startup**: Systemd targets allow services to start in parallel, significantly improving boot speed compared to the sequential startup in SysV init.
+- **More Control**: Systemd provides better control over which services are started and stopped at each target.
+
+---
+
+### **Summary: Key Takeaways**
+
+- **Run levels** are used in traditional **SysV init** systems to define different system states, such as multi-user mode, single-user mode, and graphical mode.
+- Each run level is associated with a specific set of services, and you can change between run levels using the `init` or `telinit` commands.
+- In **systemd**, run levels have been replaced by **targets**, which provide more flexibility and better service management.
+- Common systemd targets include `multi-user.target`, `graphical.target`, and `rescue.target`.
+- As a Linux or DevOps professional, understanding both run levels (for older systems) and systemd targets (for modern systems) is crucial for system management and troubleshooting.
+
+---
+
+### **Practical Commands to Know**
+
+- **Check current run level:**
+  ```bash
+  runlevel
+  ```
+
+- **Change run level (SysV init):**
+  ```bash
+  sudo init <runlevel>
+  ```
+
+- **Check systemd target:**
+  ```bash
+  systemctl get-default
+  ```
+
+- **Change systemd target:**
+  ```bash
+  sudo systemctl isolate <target>
+  ```
+
+- **Set default target:**
+  ```bash
+  sudo systemctl set-default <target>
+  ```
+
+By understanding run levels and systemd targets, you can effectively manage different operating states of a Linux system and ensure the appropriate services are started for specific operational needs.
 
 ---
 
