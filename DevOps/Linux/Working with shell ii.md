@@ -769,8 +769,21 @@ We need to find a file called **`caleston-code`** that was saved on the system, 
    - `-name caleston-code`: Specifies that we are looking for a file named **`caleston-code`**.
 
    This command returns the path where **`caleston-code`** is located.
+   Also this migt create some error    - The root directory `/` contains a wide range of directories, including system directories like `/root`, `/proc`, `/sys`, `/var`, etc. Many of these directories require **root-level** (administrator) access to read or even traverse.
+   - When you run `sudo find / -name caleston-code`, the `find` command attempts to search **every directory** starting from `/`. If it encounters directories where your user doesn't have permission, it may be **denied access** and not find the file you're looking for.
+
+   Running `find /opt -name caleston-code`, on the other hand, limits the search scope to `/opt`, which usually contains fewer directories that require special permissions (depending on how your system is configured).
+
+   **Why `/opt` works**: The `/opt` directory typically contains optional software packages installed by the user, and it is less likely to have restrictive permissions compared to directories like `/sys`, `/proc`, or `/var`.
+
+   - **Solution**: If the file might be anywhere on your system, you need to run `find` as **root** to have access to all the directories. Use `sudo` with `find`:
+     ```
+     sudo find / -name caleston-code
+     ```
 
 ---
+
+
 
 #### Task 4: Find `dummy.service` and Save its Path
 
