@@ -882,56 +882,188 @@ By mastering the structure of the Linux filesystem and understanding the various
 
 ---
 
-# Lab - Linux Runlevels and Filesystem Hierarchy 
-     
-- Access Hands-On Labs here [Hands-On Labs](https://kodekloud.com/topic/lab-linux-kernel-modules-boot-and-filetypes/)
+This lab involves practical Linux commands to explore the concepts of **Runlevels**, **systemd targets**, and the **Filesystem Hierarchy**, which are foundational in Linux system administration. Let's break down each section of the lab, explain what the commands do, and how they help in understanding Linux system functionality.
 
-To run commands that need **`sudo`**(super-user) privilages. Run **`sudo`**
-```
-$ sudo ls /root
-```
+### **1. Accessing Commands with Superuser Privileges (sudo)**
 
-To check the **`init process`** (systemd or sysV) used by the system
-```
-$ sudo ls -l /sbin/init
-```
+- **Command**: 
+  ```bash
+  $ sudo ls /root
+  ```
+  - **Explanation**: 
+    - `sudo` allows a regular user to execute commands with **superuser (root)** privileges. The `sudo` command asks for your user password and temporarily grants you root-level access.
+    - The command `ls /root` lists the contents of the `/root` directory, which is the **home directory of the root user**. Without `sudo`, regular users cannot access this directory for security reasons.
+  - **Example**: 
+    If you run the command without `sudo`, you’ll likely get a "Permission denied" error, but with `sudo`, you’ll see the contents of `/root`.
 
-To check **`default systemd target`** (eg. graphical.target or multi-user.target) set in the system
-```
-$ sudo systemctl get-default
-```
+---
 
-To change the systemd target to **`multi-user.target`**
-```
-$ sudo systemctl set-default multi-user.target
-```
+### **2. Checking the Init System**
 
-To check what type of file is **`firefox.deb`** which is located at /root
-```
-$ sudo file /root/firefox.deb
-```
+- **Command**:
+  ```bash
+  $ sudo ls -l /sbin/init
+  ```
+  - **Explanation**: 
+    - The command `ls -l` lists the file or symbolic link with detailed information, including ownership and permissions.
+    - `/sbin/init` is the **init process** used by the system to handle startup tasks.
+      - Older systems used **SysVinit**, where `init` was the first process that started all others.
+      - Modern Linux systems mostly use **systemd**, which is the more advanced init system. In systems with systemd, `/sbin/init` is often a symbolic link to `systemd`.
+  - **Example**:
+    You will see an output similar to:
+    ```
+    lrwxrwxrwx 1 root root 20 Oct 5 13:14 /sbin/init -> /lib/systemd/systemd
+    ```
+    This output shows that `/sbin/init` is a symbolic link (`l`) pointing to `/lib/systemd/systemd`.
 
-To check what type of file is **`sample_script.sh`** which is located at /root
-```
-$ sudo file /root/sample_script.sh
-```
+---
 
-You were asked to install a new **`third-party IDE`** in the system. Which directory  is the recommended choice for the installation?
-```
-Third-party software is usually installed under **`/opt`**
-```
+### **3. Checking the Default systemd Target**
 
-Which directory contains the files related to the block devices that can be seen when running the **`lsblk`** command?
-```
-Block Device or Device Node files are located under **`/dev`** directory
-```
+- **Command**:
+  ```bash
+  $ sudo systemctl get-default
+  ```
+  - **Explanation**: 
+    - `systemctl` is the command used to manage services and targets (runlevels) in **systemd-based** systems.
+    - The `get-default` option tells you which **systemd target** (which is equivalent to **runlevels** in older systems) is set as the default.
+    - Targets define the system's mode of operation. Common systemd targets include:
+      - `graphical.target`: This is equivalent to **runlevel 5** (graphical interface mode).
+      - `multi-user.target`: Equivalent to **runlevel 3** (text-based multi-user mode).
+  - **Example**:
+    The output could be:
+    ```
+    graphical.target
+    ```
+    This means that the system boots into graphical mode by default.
 
-What is the name of the **`vendor`** for the **`Ethernet Controller`** used in this system?
-```
-Use: sudo lshw and lookup the vendor for Ethernet Controller under the network section.   
-     $ sudo lshw
-```
+---
 
+### **4. Changing the systemd Target**
+
+- **Command**:
+  ```bash
+  $ sudo systemctl set-default multi-user.target
+  ```
+  - **Explanation**: 
+    - This command changes the system's default boot target to **`multi-user.target`**.
+    - The `multi-user.target` is a non-graphical, text-based mode, similar to **runlevel 3** in SysVinit systems, where multiple users can log in, but no graphical desktop environment is loaded.
+    - After setting the target, the system will boot into this mode from now on, unless it is changed back to a graphical target using:
+      ```bash
+      $ sudo systemctl set-default graphical.target
+      ```
+
+---
+
+### **5. Checking the File Type of `firefox.deb`**
+
+- **Command**:
+  ```bash
+  $ sudo file /root/firefox.deb
+  ```
+  - **Explanation**: 
+    - The `file` command identifies the type of file based on its content and not just its extension.
+    - `.deb` files are **Debian package files** used for installing software on Debian-based systems like Ubuntu.
+    - This command checks the file type of `/root/firefox.deb`, which may be the installation package for the Firefox web browser.
+  - **Example**:
+    The output could look like:
+    ```
+    /root/firefox.deb: Debian binary package (format 2.0)
+    ```
+
+---
+
+### **6. Checking the File Type of `sample_script.sh`**
+
+- **Command**:
+  ```bash
+  $ sudo file /root/sample_script.sh
+  ```
+  - **Explanation**: 
+    - Again, the `file` command checks the type of `sample_script.sh`.
+    - Shell scripts usually have a `.sh` extension and are interpreted by the shell (like Bash).
+  - **Example**:
+    The output might be:
+    ```
+    /root/sample_script.sh: Bourne-Again shell script, ASCII text executable
+    ```
+    This tells you that it’s a Bash script (interpreted by `/bin/bash`) and contains executable commands.
+
+---
+
+### **7. Installing Third-Party Software in `/opt`**
+
+- **Question**: 
+  *You were asked to install a new third-party IDE in the system. Which directory is the recommended choice for installation?*
+
+  - **Answer**: 
+    Third-party software is typically installed in the **`/opt`** directory.
+  
+  - **Explanation**: 
+    - The `/opt` directory is part of the **Filesystem Hierarchy Standard (FHS)** and is meant for optional software packages that are not managed by the package manager (like APT or YUM).
+    - When you install software manually (e.g., by downloading tarballs or external packages), it’s often placed in `/opt` to keep it separate from system-managed software.
+
+---
+
+### **8. Locating Block Device Files in `/dev`**
+
+- **Question**: 
+  *Which directory contains the files related to the block devices that can be seen when running the `lsblk` command?*
+
+  - **Answer**: 
+    Block Device or Device Node files are located under the **`/dev`** directory.
+  
+  - **Explanation**:
+    - `/dev` contains special files that represent hardware devices, including block devices such as hard drives.
+    - **Block devices** allow data to be read and written in fixed-size blocks. These include hard drives, SSDs, and USB devices.
+    - Running `lsblk` lists block devices and their partitions, and these devices are represented in `/dev` (e.g., `/dev/sda` for the first hard disk).
+
+---
+
+### **9. Checking the Vendor of the Ethernet Controller**
+
+- **Command**:
+  ```bash
+  $ sudo lshw
+  ```
+  - **Explanation**: 
+    - `lshw` (list hardware) is a command-line utility that provides detailed information about your system's hardware.
+    - The `sudo lshw` command prints out a comprehensive list of hardware components, including CPU, memory, network interfaces, and more.
+    - To find the **vendor of the Ethernet Controller**, look under the `network` section in the output.
+  - **Example**:
+    You will see something like this:
+    ```
+    *-network
+         description: Ethernet interface
+         product: Ethernet Controller
+         vendor: Intel Corporation
+         physical id: 0
+         logical name: eth0
+         ...
+    ```
+    In this example, **Intel Corporation** is the vendor for the Ethernet Controller.
+
+---
+
+### **Summary of Key Concepts**
+
+1. **sudo**: Allows you to execute commands as the root (superuser), which is necessary for tasks like system configuration and access to protected directories like `/root`.
+
+2. **Init System**: 
+   - **SysVinit** and **systemd** are different init systems used to manage how services start during the boot process.
+   - Systemd is the modern standard and is more powerful, handling dependencies and services efficiently.
+
+3. **Runlevels and systemd Targets**: 
+   - Runlevels define the state of the system (like single-user mode or graphical mode).
+   - systemd uses targets instead of traditional runlevels, where **multi-user.target** and **graphical.target** are common modes.
+
+4. **Filesystem Hierarchy**: 
+   - Linux has a well-defined directory structure where certain files and directories serve specific purposes.
+   - `/opt` is for third-party software, `/dev` contains device files, and `/etc` is where configuration files live.
+
+5. **File Types**: The `file` command is useful for determining what kind of file you’re dealing with (e.g., shell scripts, binary packages).
+
+By understanding these key concepts and commands, you will have a foundational understanding of managing a Linux system effectively.
 
 
 
