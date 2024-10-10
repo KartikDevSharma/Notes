@@ -978,3 +978,43 @@ $ sudo apt remove firefox
 ### **Conclusion**
 
 This lab showcases how to use `dpkg` and `apt` for managing packages in Debian-based Linux distributions. While `dpkg` is great for manually handling `.deb` files, **APT** is a more powerful and user-friendly tool that simplifies package management by resolving dependencies and interacting with remote repositories.
+
+
+---
+
+Here's a summarized table comparing different package managers, including RPM, YUM, DPKG, and APT, along with their key features, commands, and use cases:
+
+| **Package Manager** | **Type**               | **Distribution**         | **Command Syntax**                          | **Key Features**                                                  | **Use Cases**                                                 |
+|---------------------|-----------------------|--------------------------|--------------------------------------------|-------------------------------------------------------------------|--------------------------------------------------------------|
+| **RPM**             | Low-level             | Red Hat-based (e.g., CentOS, Fedora) | `rpm -i package.rpm`                       | - Manages `.rpm` packages <br> - No dependency resolution         | - Installing `.rpm` files directly                          |
+| **YUM**             | Higher-level          | Red Hat-based            | `yum install package_name`                 | - Handles dependencies <br> - Works with repositories <br> - Automatically updates | - Installing, removing, and updating packages from repositories |
+| **APT**             | Higher-level          | Debian-based (e.g., Ubuntu) | `apt install package_name`                 | - Handles dependencies <br> - Manages packages from repositories <br> - User-friendly | - Installing, upgrading, and managing software packages    |
+| **Dpkg**            | Low-level             | Debian-based             | `dpkg -i package.deb`                      | - Manages `.deb` packages <br> - No dependency resolution         | - Installing `.deb` files directly                          |
+| **apt-get**         | Lower-level (legacy)  | Debian-based             | `apt-get install package_name`             | - Similar to `apt` <br> - More verbose <br> - Older, less user-friendly | - Scripting and backward compatibility                       |
+
+### Key Differences Between APT and DPKG:
+
+| **Feature**             | **APT**                                      | **DPKG**                                      |
+|-------------------------|----------------------------------------------|------------------------------------------------|
+| **Level**               | Higher-level                                  | Lower-level                                   |
+| **Dependency Resolution** | Automatically resolves dependencies          | Does not resolve dependencies automatically     |
+| **Repository Interaction** | Works with remote repositories              | No repository management                       |
+| **User-Friendliness**   | More user-friendly, simpler command structure | Less user-friendly, more complex               |
+| **Commands**            | Integrated command (e.g., `apt`)            | Separate command (e.g., `dpkg`)                |
+
+### Key Differences Between RPM and YUM:
+
+| **Feature**             | **RPM**                                       | **YUM**                                        |
+|-------------------------|-----------------------------------------------|------------------------------------------------|
+| **Level**               | Low-level                                     | Higher-level                                   |
+| **Dependency Resolution** | Does not resolve dependencies automatically  | Automatically resolves dependencies            |
+| **Repository Interaction** | Does not interact with repositories          | Works with repositories                        |
+| **User-Friendliness**   | Less user-friendly                            | More user-friendly                             |
+
+### Summary
+
+- **RPM** and **YUM** are used primarily in Red Hat-based distributions. RPM is low-level, while YUM provides higher-level functionality with dependency resolution.
+- **DPKG** and **APT** are used in Debian-based distributions. DPKG is low-level and does not resolve dependencies, while APT is user-friendly and manages packages and dependencies effectively.
+- **apt-get** is an older command that serves similar functions to APT but is less user-friendly. 
+
+This table provides a quick overview and comparison of the different package managers, helping you understand their key features and use cases efficiently.
