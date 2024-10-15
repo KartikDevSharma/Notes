@@ -475,6 +475,9 @@ PostgreSQL is the default database for OpenNMS, which stores configuration, even
    /etc/opennms/opennms-datasources.xml
    ```
 
+
+PostgreSQL 14 and 15 use the scram-sha-256 password authentication method by default. If you use older versions of PostgreSQL, you should change the method in postgresql.conf and in pg_hba.conf before installing the Horizon core instance
+
 ---
 
 ### 7. **Pool Size and Maximum Database Connections**
@@ -485,6 +488,14 @@ OpenNMS relies heavily on database performance, so configuring PostgreSQL’s co
   ```bash
   max_connections = 200
   ```
+
+You must configure the PostgreSQL max_connections setting to at least twice the maximum pool size in Horizon.
+
+The default maximum pool size value in Horizon is 50, but it applies to each connect in opennms-datasources.xml: opennms (the main connection used at runtime) and opennms-admin (the connection used during administrative operations, including installation). Therefore, your max_connections setting should be at least 100.
+
+If you change the default pool size, make sure you also update the max_connections. You typically set this in PG_HOME/data/postgresql.conf, but you may also use the ALTER SYSTEM syntax. You must restart the PostgreSQL server for the changes to take effect.
+
+You may find PGTune useful to calculate configuration parameters for PostgreSQL. As with all third-party tools, we do not endorse or guarantee it. Use it at your own discretion.
 
 For larger environments, OpenNMS supports connection pooling to manage performance better.
 
