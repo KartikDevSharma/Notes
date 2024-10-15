@@ -11,22 +11,32 @@ There are two versions of OpenNMS:
 1. **Automated Network Discovery**:  
    OpenNMS can automatically discover devices and services in your network. It uses protocols like ICMP, SNMP, and other mechanisms to discover and monitor network elements, routers, switches, servers, and more.
 
+Some protocols commonly used in OpenNMS, including ICMP and SNMP, along with others like HTTP, SSH, and WMI:
 
-| Feature                     | ICMP                                 | SNMP                                 |
-|-----------------------------|--------------------------------------|--------------------------------------|
-| **Purpose**                 | Used for network diagnostics (e.g., ping) | Used for network management and monitoring |
-| **Protocol Type**           | Internet Layer Protocol              | Application Layer Protocol            |
-| **Communication Model**     | Request/Reply (typically)            | Polling and Traps                    |
-| **Data Format**             | Simple message formats (e.g., echo requests) | Structured data using MIB (Management Information Base) |
-| **Transport Protocol**       | Operates directly over IP            | Usually uses UDP (but can use TCP)  |
-| **Overhead**                | Low, minimal header size             | Higher due to MIB and data structures |
-| **Security**                | No inherent security features         | Can use SNMPv3 for authentication and encryption |
-| **Use Cases**               | Testing connectivity and diagnosing issues | Monitoring device performance, configuration management |
-| **Performance Impact**      | Minimal impact on network performance | Can introduce overhead due to polling and traps |
-| **Reliability**             | Not reliable; packets can be lost    | More reliable; supports acknowledgments in SNMPv2c and SNMPv3 |
-| **Scalability**             | Less scalable for large networks      | Highly scalable, suitable for large networks |
-| **Configuration**           | Minimal configuration needed          | Requires configuration of MIBs and devices |
-| **Common Commands**         | ping, traceroute                     | get, set, trap                        |
+| Feature                     | ICMP                                 | SNMP                                 | HTTP                                  | SSH                                   | WMI                                   |
+|-----------------------------|--------------------------------------|--------------------------------------|---------------------------------------|---------------------------------------|---------------------------------------|
+| **Purpose**                 | Network diagnostics (e.g., ping)    | Network management and monitoring     | Web services and data retrieval       | Secure remote administration            | Windows system monitoring and management |
+| **Protocol Type**           | Internet Layer Protocol              | Application Layer Protocol            | Application Layer Protocol             | Application Layer Protocol             | Application Layer Protocol             |
+| **Communication Model**     | Request/Reply (typically)            | Polling and Traps                    | Request/Response                       | Request/Response                       | Event-driven, Query-based              |
+| **Data Format**             | Simple message formats               | Structured data (MIBs)               | Text-based (HTML, JSON, XML)          | Text-based (command line, scripts)    | Binary and COM-based                    |
+| **Transport Protocol**      | Operates directly over IP            | Usually uses UDP (can use TCP)       | Usually uses TCP                       | Usually uses TCP                       | Uses DCOM over RPC                      |
+| **Overhead**                | Low, minimal header size             | Moderate, depends on MIB size        | Higher due to HTML/JSON/XML parsing    | Moderate, depends on session overhead  | Higher due to object management          |
+| **Security**                | No inherent security features         | Can use SNMPv3 for security          | Can use HTTPS for encryption           | Strong encryption and authentication    | Typically lacks encryption              |
+| **Use Cases**               | Testing connectivity                  | Monitoring device performance         | Web service interaction                | Secure shell access to devices         | Windows performance monitoring          |
+| **Performance Impact**      | Minimal impact                       | Can impact performance with polling   | Can be significant with large payloads | Moderate impact due to encryption      | Can be significant with many queries    |
+| **Reliability**             | Not reliable; packets can be lost    | More reliable with retries            | Reliable with HTTP status codes        | Reliable with session management       | Reliable, but depends on DCOM setup    |
+| **Scalability**             | Less scalable for large networks      | Highly scalable                       | Highly scalable                        | Scalable but can be limited by resources | Scalable but depends on Windows architecture |
+| **Configuration**           | Minimal configuration                 | Requires MIBs and device setup       | Minimal configuration for endpoints    | Requires configuration of keys and access | Requires setup of WMI on target systems  |
+| **Common Commands**         | ping, traceroute                     | get, set, trap                        | GET, POST, PUT, DELETE                 | ssh, scp                              | Win32_* classes, queries               |
+
+### Summary:
+- **ICMP** is best for basic connectivity testing.
+- **SNMP** is ideal for comprehensive network monitoring and management.
+- **HTTP** is useful for interacting with web services and APIs.
+- **SSH** provides secure remote administration.
+- **WMI** is tailored for monitoring and managing Windows environments.
+
+These protocols serve different purposes and can be leveraged in OpenNMS depending on the specific requirements of the network environment.
 
 
 2. **Fault Management**:  
