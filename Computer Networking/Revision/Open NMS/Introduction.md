@@ -11,6 +11,24 @@ There are two versions of OpenNMS:
 1. **Automated Network Discovery**:  
    OpenNMS can automatically discover devices and services in your network. It uses protocols like ICMP, SNMP, and other mechanisms to discover and monitor network elements, routers, switches, servers, and more.
 
+
+| Feature                     | ICMP                                 | SNMP                                 |
+|-----------------------------|--------------------------------------|--------------------------------------|
+| **Purpose**                 | Used for network diagnostics (e.g., ping) | Used for network management and monitoring |
+| **Protocol Type**           | Internet Layer Protocol              | Application Layer Protocol            |
+| **Communication Model**     | Request/Reply (typically)            | Polling and Traps                    |
+| **Data Format**             | Simple message formats (e.g., echo requests) | Structured data using MIB (Management Information Base) |
+| **Transport Protocol**       | Operates directly over IP            | Usually uses UDP (but can use TCP)  |
+| **Overhead**                | Low, minimal header size             | Higher due to MIB and data structures |
+| **Security**                | No inherent security features         | Can use SNMPv3 for authentication and encryption |
+| **Use Cases**               | Testing connectivity and diagnosing issues | Monitoring device performance, configuration management |
+| **Performance Impact**      | Minimal impact on network performance | Can introduce overhead due to polling and traps |
+| **Reliability**             | Not reliable; packets can be lost    | More reliable; supports acknowledgments in SNMPv2c and SNMPv3 |
+| **Scalability**             | Less scalable for large networks      | Highly scalable, suitable for large networks |
+| **Configuration**           | Minimal configuration needed          | Requires configuration of MIBs and devices |
+| **Common Commands**         | ping, traceroute                     | get, set, trap                        |
+
+
 2. **Fault Management**:  
    OpenNMS can detect when devices or services are down by regularly polling them. When issues arise, it can generate alarms and notify administrators via email, SMS, or other channels. This helps reduce downtime and ensures fast issue resolution.
 
