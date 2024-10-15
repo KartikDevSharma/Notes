@@ -319,6 +319,17 @@ Before installing OpenNMS, you should ensure that the DNS configuration is corre
 - Ensure that the **fully qualified domain name (FQDN)** of your OpenNMS server is resolvable both internally and externally.
 - Set up **reverse DNS** if needed, as it helps OpenNMS properly identify devices.
 
+### Why is DNS important for OpenNMS Horizon?
+OpenNMS Horizon needs to communicate with many devices on your network. It's like a manager trying to keep track of all the employees in a big company. DNS helps OpenNMS find these devices quickly, just like how a company directory helps a manager find employees.
+
+### DNS for beginners:
+- Imagine you're setting up a big party (that's your network).
+- OpenNMS is like the party planner who needs to contact all the guests (the devices on your network).
+- DNS is like having a really good contact list that helps the party planner quickly find and contact each guest.
+
+### What you need to do:
+1. Make sure your computer (where you're installing OpenNMS) has a clear, unique name on the network. This is like making sure the party planner has a name tag so everyone knows who they are.
+2. If possible, set up your computer to help with DNS lookups. This is like giving the party planner their own copy of the contact list, so they don't have to keep asking someone else for phone numbers.
 ---
 
 ### 3. **Quick Installation**
@@ -329,6 +340,13 @@ If you need to quickly install OpenNMS, the **"Quick Start"** method can help:
 3. Install **OpenNMS Core** using package management (e.g., `yum`, `apt`, or `docker`).
 4. Configure and launch the OpenNMS service.
 
+- Think of it as setting up a pre-built desk versus building one from scratch.
+- It's great for trying out OpenNMS or for smaller networks.
+- However, for bigger networks (like managing a large office building instead of a small apartment), you might need a more custom setup later.
+
+### What you need to do:
+1. Decide if Quick Installation is right for you. If you're just learning or have a small network (like a home or small office), Quick Installation is perfect.
+2. Follow the Quick Installation guide step-by-step. Don't worry if you don't understand everything at first.
 ---
 
 ### 4. **Scope**
@@ -340,6 +358,14 @@ OpenNMS Horizon is designed to scale across various sizes of networks, supportin
 - Event and alert management
 - Integration with existing tools
 
+### For beginners:
+- Think of OpenNMS like a superhero for your network.
+- Its "scope" is like describing this superhero's powers and how many people they can protect.
+
+### Key points:
+1. OpenNMS can watch over very large networks (thousands of devices).
+2. It's free and open-source, which means anyone can use it without paying.
+3. It's good for all sizes of organizations, from small businesses to huge companies.
 ---
 
 ### 5. **Requirements**
