@@ -156,3 +156,301 @@ print(data)
 
 ---
 
+
+### **Indexing with a Mask in NumPy (Boolean Masking)**  
+
+**What is Masked Indexing?**  
+Masked indexing (also called **Boolean masking**) allows you to filter or extract elements from a NumPy array **based on a condition**. Instead of using index positions, you use a **Boolean mask** (an array of `True` or `False` values).  
+
+This technique is **very powerful** for filtering and modifying data efficiently.  
+
+---
+
+## **1. Basic Masking Example**
+```python
+import numpy as np
+
+arr = np.array([10, 20, 30, 40, 50])
+mask = arr > 25  # Create a boolean mask (True where value > 25)
+
+print(mask)  
+# Output: [False False  True  True  True]
+
+print(arr[mask])  
+# Output: [30 40 50]  (Only values greater than 25)
+```
+🔹 **How it works?**  
+- `arr > 25` creates a Boolean mask: `[False, False, True, True, True]`  
+- Using `arr[mask]` selects only `True` values from `arr`.  
+
+---
+
+## **2. Using Masking with Different Conditions**  
+
+✅ **Find even numbers**  
+```python
+arr = np.array([1, 2, 3, 4, 5, 6])
+mask = arr % 2 == 0  # Mask for even numbers
+print(arr[mask])  # Output: [2 4 6]
+```
+
+✅ **Find numbers in a specific range**  
+```python
+arr = np.array([10, 20, 30, 40, 50])
+mask = (arr > 15) & (arr < 45)  # Find numbers between 15 and 45
+print(arr[mask])  # Output: [20 30 40]
+```
+🔹 **Note:**  
+- Use `&` (AND) instead of `and`.  
+- Use `|` (OR) instead of `or`.  
+
+✅ **Find negative numbers**  
+```python
+arr = np.array([-5, 10, -15, 20, 25])
+mask = arr < 0
+print(arr[mask])  # Output: [-5 -15]
+```
+
+---
+
+## **3. Modifying Data Using Masking**  
+You can use masked indexing **not just to extract values but also to modify them**.
+
+✅ **Set all negative values to zero**  
+```python
+arr = np.array([-10, 5, -3, 8, -1])
+arr[arr < 0] = 0  # Replace all negative numbers with 0
+print(arr)  # Output: [0 5 0 8 0]
+```
+
+✅ **Increase all values greater than 10 by 100**  
+```python
+arr = np.array([5, 12, 7, 20])
+arr[arr > 10] += 100
+print(arr)  # Output: [  5 112   7 120]
+```
+
+---
+
+## **4. Masking in Multi-Dimensional Arrays**  
+
+✅ **Find elements greater than 10 in a 2D array**  
+```python
+arr = np.array([[5, 15, 25], [2, 8, 30]])
+mask = arr > 10
+print(arr[mask])  # Output: [15 25 30]
+```
+🔹 The result is **a 1D array** of matching values.
+
+✅ **Set all values < 10 to zero in a 2D array**  
+```python
+arr[arr < 10] = 0
+print(arr)
+# Output:
+# [[ 0 15 25]
+#  [ 0  0 30]]
+```
+
+---
+
+## **5. Using `np.where()` for Masking**
+`np.where(condition, value_if_true, value_if_false)` is useful for replacing values.  
+```python
+arr = np.array([10, 20, 30, 40])
+new_arr = np.where(arr > 20, 1, 0)  # Replace values > 20 with 1, others with 0
+print(new_arr)  # Output: [0 0 1 1]
+```
+
+---
+
+## **6. Masking with NaN (Missing Values)**
+✅ **Replace NaN values with 0**  
+```python
+arr = np.array([1, np.nan, 3, np.nan, 5])
+arr[np.isnan(arr)] = 0  # Replace NaN with 0
+print(arr)  # Output: [1. 0. 3. 0. 5.]
+```
+
+✅ **Filter out NaN values**  
+```python
+cleaned_arr = arr[~np.isnan(arr)]  # Remove NaN values
+print(cleaned_arr)  # Output: [1. 3. 5.]
+```
+
+---
+
+## **Interview Tips (Common Questions)**  
+1️⃣ **What is masked indexing in NumPy?**  
+➡ It is a way to filter or modify arrays using Boolean conditions.  
+
+2️⃣ **How to find values greater than 10 in an array?**  
+➡ `arr[arr > 10]`  
+
+3️⃣ **How to replace negative values with zero?**  
+➡ `arr[arr < 0] = 0`  
+
+4️⃣ **Difference between masked indexing and `np.where()`?**  
+➡ **Masked indexing** directly extracts or modifies elements, while `np.where()` allows conditional replacements.
+
+---
+
+### **Summary**
+✅ **Masked indexing** is a powerful tool for filtering and modifying arrays.  
+✅ **Boolean masks** allow selection based on conditions.  
+✅ **Works on multi-dimensional arrays too.**  
+✅ **`np.where()` is useful for conditional replacements.**  
+
+---
+
+# **Numerical Operations on NumPy Arrays**  
+
+NumPy provides **fast, efficient, and vectorized** numerical operations on arrays. Instead of using loops (which are slow), NumPy allows **element-wise** and **aggregate** operations on entire arrays at once.  
+
+---
+
+## **1. Element-wise Arithmetic Operations**  
+These operations apply **to each element** of the array automatically.
+
+```python
+import numpy as np
+
+arr1 = np.array([1, 2, 3, 4])
+arr2 = np.array([10, 20, 30, 40])
+
+# Addition
+print(arr1 + arr2)  # Output: [11 22 33 44]
+
+# Subtraction
+print(arr2 - arr1)  # Output: [ 9 18 27 36]
+
+# Multiplication
+print(arr1 * arr2)  # Output: [ 10  40  90 160]
+
+# Division
+print(arr2 / arr1)  # Output: [10. 10. 10. 10.]
+
+# Power
+print(arr1 ** 2)  # Output: [ 1  4  9 16]
+```
+🔹 **No loops needed! Operations are performed on entire arrays at once.**  
+
+---
+
+## **2. Scalar Operations**  
+When you apply an operation between an array and a **single number (scalar)**, NumPy **broadcasts** the scalar to all elements.
+
+```python
+arr = np.array([1, 2, 3, 4])
+
+print(arr + 10)  # Output: [11 12 13 14] (Adds 10 to each element)
+print(arr * 2)   # Output: [2 4 6 8] (Multiplies each element by 2)
+print(arr / 2)   # Output: [0.5 1.  1.5 2. ] (Divides each element by 2)
+```
+
+---
+
+## **3. Aggregate Functions (Sum, Mean, Max, etc.)**
+NumPy provides **built-in functions** to compute **summary statistics** on arrays.
+
+```python
+arr = np.array([1, 2, 3, 4, 5])
+
+print(np.sum(arr))   # Output: 15 (Sum of all elements)
+print(np.mean(arr))  # Output: 3.0 (Mean/Average)
+print(np.max(arr))   # Output: 5 (Maximum value)
+print(np.min(arr))   # Output: 1 (Minimum value)
+print(np.prod(arr))  # Output: 120 (Product of all elements)
+print(np.std(arr))   # Output: 1.414 (Standard deviation)
+```
+
+✅ **Works on multi-dimensional arrays too!**  
+
+```python
+arr2D = np.array([[1, 2, 3], [4, 5, 6]])
+
+print(np.sum(arr2D, axis=0))  # Sum along columns → Output: [5 7 9]
+print(np.sum(arr2D, axis=1))  # Sum along rows    → Output: [ 6 15]
+```
+🔹 `axis=0` → operates **column-wise**  
+🔹 `axis=1` → operates **row-wise**  
+
+---
+
+## **4. Rounding and Trigonometric Operations**
+NumPy provides functions for rounding and trigonometric operations.
+
+```python
+arr = np.array([3.14, 1.67, -2.89])
+
+# Rounding
+print(np.round(arr))  # Output: [ 3.  2. -3.]
+print(np.floor(arr))  # Output: [ 3.  1. -3.] (Round down)
+print(np.ceil(arr))   # Output: [ 4.  2. -2.] (Round up)
+```
+
+### **Trigonometric Functions**
+```python
+angles = np.array([0, 30, 45, 60, 90])  # Degrees
+radians = np.radians(angles)  # Convert to radians
+
+print(np.sin(radians))  # Sine values
+print(np.cos(radians))  # Cosine values
+print(np.tan(radians))  # Tangent values
+```
+
+---
+
+## **5. Logarithmic and Exponential Functions**
+```python
+arr = np.array([1, 2, 10, 100])
+
+print(np.log(arr))   # Natural log (base e)
+print(np.log2(arr))  # Log base 2
+print(np.log10(arr)) # Log base 10
+print(np.exp(arr))   # Exponential (e^x)
+```
+
+---
+
+## **6. Modulo and Absolute Value**
+```python
+arr = np.array([-10, 20, -30, 40])
+
+print(np.abs(arr))   # Output: [10 20 30 40] (Absolute values)
+print(np.mod(arr, 3))  # Output: [2 2 0 1] (Modulo 3)
+```
+
+---
+
+## **7. Matrix Operations**
+NumPy allows **matrix operations** like dot product and transpose.
+
+```python
+A = np.array([[1, 2], [3, 4]])
+B = np.array([[5, 6], [7, 8]])
+
+# Matrix multiplication (dot product)
+print(np.dot(A, B))  
+# Output:
+# [[19 22]
+#  [43 50]]
+
+# Transpose of a matrix
+print(A.T)  
+# Output:
+# [[1 3]
+#  [2 4]]
+```
+
+---
+
+## **Interview Summary (Important Points)**
+1️⃣ **NumPy performs element-wise operations efficiently.**  
+2️⃣ **Scalar operations get broadcasted across arrays.**  
+3️⃣ **Use built-in aggregate functions (`sum`, `mean`, `max`, etc.).**  
+4️⃣ **NumPy supports rounding, trigonometric, log, and exponential functions.**  
+5️⃣ **Matrix operations like dot product and transpose are optimized.**  
+
+
+ ---
+
