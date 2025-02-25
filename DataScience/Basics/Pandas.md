@@ -616,3 +616,191 @@ df['Month'] = df['Date'].dt.month
 ✅ **Convert dates using `pd.to_datetime()` for better time analysis.**  
 
 ---
+
+
+# **Merging Data in Pandas (Beginner-Friendly Guide)**  
+
+## **Why Do We Need Merging?**  
+🔹 Often, **data is spread across multiple files** (like different CSVs).  
+🔹 Instead of manually copying data, we can **merge (combine)** it efficiently using Pandas.  
+🔹 This is useful in **real-world scenarios**, such as combining:  
+   - **Employee records** (one table has names, another has salaries)  
+   - **Sales data** (one table has products, another has sales figures)  
+   - **Database-like operations** (joining tables like in SQL)  
+
+---
+
+## **1. Types of Merging (Joins) in Pandas**  
+Pandas provides **4 main types of merging** (similar to SQL joins):  
+
+| Merge Type  | Keeps Matching Rows? | Keeps Unmatched Rows? |
+|-------------|----------------------|----------------------|
+| **Inner Join**  | ✅ Yes  | ❌ No  |
+| **Outer Join**  | ✅ Yes  | ✅ Yes (fills missing values with NaN) |
+| **Left Join**   | ✅ Yes (all from left)  | ✅ Yes (only unmatched from right) |
+| **Right Join**  | ✅ Yes (all from right) | ✅ Yes (only unmatched from left) |
+
+### **How Do We Perform Merging in Pandas?**  
+Pandas provides **`merge()`** to combine two DataFrames based on a **common column**.
+
+---
+
+## **2. Inner Join (Most Common)**
+🔹 **Keeps only matching rows** (removes non-matching data).  
+🔹 Example: We have two datasets – **Employees** and **Salaries**.
+
+```python
+import pandas as pd
+
+# First DataFrame (Employee Details)
+df1 = pd.DataFrame({
+    'EmployeeID': [1, 2, 3, 4],
+    'Name': ['Alice', 'Bob', 'Charlie', 'David']
+})
+
+# Second DataFrame (Salaries)
+df2 = pd.DataFrame({
+    'EmployeeID': [2, 3, 4, 5],
+    'Salary': [50000, 60000, 70000, 80000]
+})
+
+# Perform Inner Join (Keeps only matching EmployeeID values)
+merged_df = pd.merge(df1, df2, on='EmployeeID', how='inner')
+
+print(merged_df)
+```
+**Output:**
+```
+   EmployeeID   Name  Salary
+0          2    Bob   50000
+1          3  Charlie 60000
+2          4   David  70000
+```
+✅ **Only Employees 2, 3, and 4 exist in both tables, so they are kept.**  
+❌ **Employee 1 (from `df1`) and Employee 5 (from `df2`) are removed.**  
+
+---
+
+## **3. Left Join (Keeps All from Left, Matches from Right)**
+🔹 **Keeps all rows from the "left" DataFrame (`df1`)**.  
+🔹 If no match is found in `df2`, it **fills `NaN`**.  
+
+```python
+merged_df = pd.merge(df1, df2, on='EmployeeID', how='left')
+print(merged_df)
+```
+**Output:**
+```
+   EmployeeID   Name  Salary
+0          1  Alice     NaN
+1          2    Bob   50000
+2          3  Charlie 60000
+3          4   David  70000
+```
+✅ **All employees from `df1` are kept.**  
+✅ **Matching salaries from `df2` are added.**  
+❌ **Alice has no salary in `df2`, so it shows `NaN`.**  
+
+---
+
+## **4. Right Join (Keeps All from Right, Matches from Left)**
+🔹 **Keeps all rows from `df2`**, and matches from `df1`.  
+🔹 If no match is found in `df1`, it **fills `NaN`**.
+
+```python
+merged_df = pd.merge(df1, df2, on='EmployeeID', how='right')
+print(merged_df)
+```
+**Output:**
+```
+   EmployeeID   Name  Salary
+0          2    Bob   50000
+1          3  Charlie 60000
+2          4   David  70000
+3          5     NaN   80000
+```
+✅ **All employees from `df2` are kept.**  
+✅ **Matching names from `df1` are added.**  
+❌ **Employee 5 has no name in `df1`, so it shows `NaN`.**  
+
+---
+
+## **5. Outer Join (Keeps Everything, Fills Missing with NaN)**
+🔹 **Combines ALL records from both DataFrames.**  
+🔹 **Fills `NaN` wherever there is no match.**  
+
+```python
+merged_df = pd.merge(df1, df2, on='EmployeeID', how='outer')
+print(merged_df)
+```
+**Output:**
+```
+   EmployeeID   Name  Salary
+0          1  Alice     NaN
+1          2    Bob   50000
+2          3  Charlie 60000
+3          4   David  70000
+4          5     NaN   80000
+```
+✅ **All employees from both tables are kept.**  
+✅ **Unmatched values are filled with `NaN`.**  
+
+---
+
+## **6. Merging on Multiple Columns**
+Sometimes, you may need to **merge on more than one column**.
+
+```python
+df1 = pd.DataFrame({
+    'EmployeeID': [1, 2, 3],
+    'Department': ['HR', 'IT', 'Finance'],
+    'Name': ['Alice', 'Bob', 'Charlie']
+})
+
+df2 = pd.DataFrame({
+    'EmployeeID': [1, 2, 3],
+    'Department': ['HR', 'IT', 'Finance'],
+    'Salary': [50000, 60000, 70000]
+})
+
+merged_df = pd.merge(df1, df2, on=['EmployeeID', 'Department'], how='inner')
+print(merged_df)
+```
+✅ **Both `EmployeeID` and `Department` must match for merging.**  
+
+---
+
+## **7. Concatenating Data (Stacking Rows)**
+🔹 If you have **two DataFrames with the same columns**, you can **stack them** on top of each other.
+
+```python
+df1 = pd.DataFrame({'EmployeeID': [1, 2], 'Name': ['Alice', 'Bob']})
+df2 = pd.DataFrame({'EmployeeID': [3, 4], 'Name': ['Charlie', 'David']})
+
+df_combined = pd.concat([df1, df2], axis=0)  # Combine row-wise
+print(df_combined)
+```
+✅ **Stacks `df2` below `df1` like adding new rows.**  
+
+---
+
+## **8. Summary (How to Remember This?)**
+Think of merging as **matching values in two tables**.  
+
+| Type        | What It Does |
+|-------------|-------------|
+| **Inner Join**  | Keeps only matching rows (removes non-matching). |
+| **Left Join**   | Keeps all from left, matches from right (fills missing with NaN). |
+| **Right Join**  | Keeps all from right, matches from left (fills missing with NaN). |
+| **Outer Join**  | Keeps all from both tables (fills missing with NaN). |
+
+---
+
+## **9. Interview Cheat Sheet**
+✔ **Use `on='ColumnName'` to merge on a common column.**  
+✔ **Use `how='inner'` for matching data only.**  
+✔ **Use `how='left'` to keep all left-side data.**  
+✔ **Use `how='outer'` to keep everything.**  
+✔ **Use `concat()` to stack rows.**  
+
+---
