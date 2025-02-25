@@ -804,3 +804,189 @@ Think of merging as **matching values in two tables**.
 ✔ **Use `concat()` to stack rows.**  
 
 ---
+
+
+# **Reading Data from Different Sources Using Pandas (Absolute Beginner Guide)**  
+
+## **Why Do We Need to Read Data?**  
+📊 **Real-world data is stored in files or databases, not typed manually.**  
+✅ Pandas makes it **super easy** to load data from different sources like:  
+- CSV files  
+- Excel files  
+- SQL Databases  
+- JSON files  
+- APIs (Web Data)  
+
+---
+
+## **1️⃣ Reading Data from CSV Files**  
+🔹 CSV (Comma-Separated Values) is the **most common** data format.  
+🔹 It looks like a **spreadsheet**, with rows and columns.  
+
+### **Example CSV (`employees.csv`):**  
+```
+EmployeeID,Name,Salary,Department
+1,Alice,50000,HR
+2,Bob,60000,IT
+3,Charlie,70000,Finance
+```
+
+### **How to Read a CSV in Pandas?**
+```python
+import pandas as pd
+
+# Read CSV file
+df = pd.read_csv("employees.csv")
+
+# Show first 5 rows
+print(df.head())
+```
+**Output:**
+```
+   EmployeeID   Name  Salary Department
+0          1  Alice  50000        HR
+1          2    Bob  60000        IT
+2          3 Charlie 70000   Finance
+```
+🔹 `pd.read_csv("filename.csv")` loads the file into a **DataFrame** (table).  
+🔹 `df.head()` shows the **first 5 rows**.  
+
+### **Common CSV Read Options**
+| Option | What It Does | Example |
+|--------|-------------|---------|
+| `sep=";"` | If values are **separated by semicolons** instead of commas | `pd.read_csv("file.csv", sep=";")` |
+| `header=None` | If the CSV **doesn't have column names** | `pd.read_csv("file.csv", header=None)` |
+| `index_col=0` | Use the **first column as index** | `pd.read_csv("file.csv", index_col=0)` |
+
+---
+
+## **2️⃣ Reading Data from Excel Files (`.xlsx`)**  
+🔹 Excel files are **widely used** in offices.  
+🔹 Pandas can read **specific sheets** in an Excel workbook.
+
+### **Example Excel File (`data.xlsx`):**  
+| EmployeeID | Name  | Salary | Department |
+|------------|------|--------|------------|
+| 1          | Alice | 50000  | HR         |
+| 2          | Bob   | 60000  | IT         |
+| 3          | Charlie | 70000  | Finance  |
+
+### **How to Read an Excel File?**
+```python
+df = pd.read_excel("data.xlsx")
+print(df.head())
+```
+✅ Works just like `read_csv()`, but for Excel files.  
+
+### **Reading a Specific Sheet in Excel**
+```python
+df = pd.read_excel("data.xlsx", sheet_name="Salaries")
+```
+✅ This reads a sheet **named "Salaries"** instead of the first sheet.  
+
+📌 **Requires `openpyxl` library to be installed** (`pip install openpyxl`).  
+
+---
+
+## **3️⃣ Reading Data from JSON Files (`.json`)**  
+🔹 JSON (**JavaScript Object Notation**) is used in **APIs and web data**.  
+🔹 It looks like a **dictionary** in Python.
+
+### **Example JSON (`data.json`):**
+```json
+[
+    {"EmployeeID": 1, "Name": "Alice", "Salary": 50000, "Department": "HR"},
+    {"EmployeeID": 2, "Name": "Bob", "Salary": 60000, "Department": "IT"}
+]
+```
+### **How to Read JSON in Pandas?**
+```python
+df = pd.read_json("data.json")
+print(df.head())
+```
+✅ Converts JSON into a **DataFrame (table format).**  
+
+---
+
+## **4️⃣ Reading Data from SQL Databases**
+🔹 Data is **stored in databases** like MySQL, PostgreSQL, SQLite.  
+🔹 We use **SQL queries** to fetch data into Pandas.
+
+### **How to Read SQL Data in Pandas?**
+```python
+import sqlite3
+
+# Connect to a database
+conn = sqlite3.connect("company.db")
+
+# Read data using SQL query
+df = pd.read_sql("SELECT * FROM employees", conn)
+
+print(df.head())
+```
+✅ Works **just like reading CSV** but pulls data from a **database table**.  
+
+---
+
+## **5️⃣ Reading Data from Web Pages (HTML Tables)**
+🔹 Some websites have **tables** with useful data.  
+🔹 Pandas can **scrape tables** directly from websites.
+
+### **Example: Read a Table from a Website**
+```python
+url = "https://example.com/table_page.html"
+tables = pd.read_html(url)
+
+# Show the first table
+df = tables[0]
+print(df.head())
+```
+✅ Pandas automatically **detects and extracts tables** from the webpage.  
+
+📌 **Requires `lxml` library** (`pip install lxml`).  
+
+---
+
+## **6️⃣ Reading Data from APIs (Live Data)**
+🔹 APIs send **live data** in JSON format.  
+🔹 Example: **Weather API, Stock Prices, Cryptocurrency Data.**
+
+### **Example: Read Data from an API**
+```python
+import requests
+
+# Fetch data from an API
+url = "https://api.example.com/data"
+response = requests.get(url)
+
+# Convert JSON response to Pandas DataFrame
+df = pd.DataFrame(response.json())
+
+print(df.head())
+```
+✅ Gets **real-time data** from the internet into Pandas.  
+
+---
+
+## **📝 Summary Table: How to Read Different Data Sources**
+| **Source** | **Function** | **Example** |
+|------------|-------------|-------------|
+| **CSV File** | `pd.read_csv()` | `df = pd.read_csv("file.csv")` |
+| **Excel File** | `pd.read_excel()` | `df = pd.read_excel("file.xlsx")` |
+| **JSON File** | `pd.read_json()` | `df = pd.read_json("file.json")` |
+| **SQL Database** | `pd.read_sql()` | `df = pd.read_sql("SELECT * FROM table", conn)` |
+| **Web Table (HTML)** | `pd.read_html()` | `df = pd.read_html("https://example.com")[0]` |
+| **API (Live Data)** | `requests.get(url).json()` | `df = pd.DataFrame(requests.get(url).json())` |
+
+---
+
+## **💡 How to Remember This?**  
+1. **CSV →** `pd.read_csv()` ✅ Most common format.  
+2. **Excel →** `pd.read_excel()` ✅ Office files.  
+3. **JSON →** `pd.read_json()` ✅ Web & APIs.  
+4. **SQL →** `pd.read_sql()` ✅ Databases.  
+5. **Web →** `pd.read_html()` ✅ Scraping tables from websites.  
+6. **APIs →** `requests.get(url).json()` ✅ Live data.  
+
+---
+
