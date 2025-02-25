@@ -458,3 +458,161 @@ df.groupby('Age').mean()  # Average values grouped by Age
 
 
 ---
+
+# **Working with CSV Files in Pandas (Beginner-Friendly Guide)**  
+
+CSV (Comma-Separated Values) files are **one of the most common formats** for storing tabular data.  
+Pandas makes it **super easy** to read, write, and manipulate CSV files.  
+
+---
+
+## **1. Reading a CSV File**  
+The first step in working with CSV files is to load them into a **Pandas DataFrame**.
+
+### **🔹 Basic CSV File Reading**
+```python
+import pandas as pd
+
+df = pd.read_csv("data.csv")  # Load CSV into a DataFrame
+print(df.head())  # Show first 5 rows
+```
+✅ **`pd.read_csv()`** automatically detects **columns and rows** from the CSV file.  
+✅ **`head()`** helps in previewing the first 5 rows.  
+
+---
+
+## **2. Understanding the Data**  
+After loading the data, you should always **check its structure**.
+
+### **🔹 Getting General Information**
+```python
+print(df.info())  # Summary of the DataFrame
+print(df.shape)   # (Rows, Columns)
+print(df.columns) # List of column names
+```
+✅ **`info()`** shows **data types**, **missing values**, and **memory usage**.  
+✅ **`shape`** tells how many **rows and columns** exist.  
+
+### **🔹 Checking for Missing Values**
+```python
+print(df.isnull().sum())  # Count missing values in each column
+```
+
+---
+
+## **3. Selecting Specific Columns and Rows**
+### **🔹 Selecting Specific Columns**
+```python
+print(df['Name'])  # Get a single column
+print(df[['Name', 'Salary']])  # Get multiple columns
+```
+
+### **🔹 Selecting Specific Rows**
+```python
+print(df.loc[0])   # Select row with index 0
+print(df.iloc[2])  # Select the third row (position-based)
+```
+
+---
+
+## **4. Writing Data to a CSV File**
+Once we modify the data, we often need to **save it back** to a CSV file.
+
+### **🔹 Saving Data to CSV**
+```python
+df.to_csv("new_data.csv", index=False)  # Save without the index column
+```
+✅ **`index=False`** prevents Pandas from saving the **row index** to the file.  
+
+---
+
+## **5. Handling Large CSV Files Efficiently**
+Sometimes, CSV files are **huge** and can't fit into memory.
+
+### **🔹 Reading Only a Few Rows**
+```python
+df = pd.read_csv("large_data.csv", nrows=1000)  # Read only first 1000 rows
+```
+
+### **🔹 Reading in Chunks**
+```python
+chunk_size = 50000  # Process 50,000 rows at a time
+for chunk in pd.read_csv("large_data.csv", chunksize=chunk_size):
+    print(chunk.shape)  # Process chunk by chunk
+```
+✅ **This is useful for large datasets** that don’t fit into RAM.  
+
+---
+
+## **6. Handling Different CSV Formats**
+### **🔹 Changing Delimiters**
+Some CSV files use **tabs (`\t`) or semicolons (`;`)** instead of commas.
+
+```python
+df = pd.read_csv("data.tsv", sep='\t')  # Read tab-separated file
+```
+
+### **🔹 Handling Missing Values While Reading**
+```python
+df = pd.read_csv("data.csv", na_values=["?", "N/A", "missing"])
+```
+✅ This replaces `?`, `N/A`, or `missing` with **NaN (Not a Number)**.  
+
+---
+
+## **7. Filtering and Modifying CSV Data**
+### **🔹 Filtering Data**
+```python
+high_salary = df[df['Salary'] > 50000]  # Get rows where Salary > 50,000
+```
+
+### **🔹 Adding a New Column**
+```python
+df['Bonus'] = df['Salary'] * 0.10  # Add a 10% bonus column
+```
+
+### **🔹 Removing a Column**
+```python
+df.drop(columns=['Bonus'], inplace=True)  # Remove the "Bonus" column
+```
+
+---
+
+## **8. Sorting and Grouping Data**
+### **🔹 Sorting by a Column**
+```python
+df_sorted = df.sort_values(by='Salary', ascending=False)  # Highest salary first
+```
+
+### **🔹 Grouping and Aggregating Data**
+```python
+df_grouped = df.groupby('Department')['Salary'].mean()  # Average Salary per Department
+```
+
+---
+
+## **9. Working with Dates in CSV Files**
+If a CSV file contains **dates**, Pandas can convert them into a usable format.
+
+### **🔹 Converting Date Columns**
+```python
+df['Date'] = pd.to_datetime(df['Date'])  # Convert to datetime format
+```
+
+### **🔹 Extracting Date Parts**
+```python
+df['Year'] = df['Date'].dt.year
+df['Month'] = df['Date'].dt.month
+```
+
+---
+
+## **10. Interview Summary (Key Takeaways)**
+✅ **Use `pd.read_csv()` to load data, `df.to_csv()` to save it.**  
+✅ **Always check data with `df.info()`, `df.shape()`, and `df.head()`.**  
+✅ **Use `index=False` to avoid unnecessary columns while saving.**  
+✅ **Handle missing data with `na_values`, `fillna()`, or `dropna()`.**  
+✅ **For large files, use `chunksize` or `nrows` to optimize performance.**  
+✅ **Convert dates using `pd.to_datetime()` for better time analysis.**  
+
+---
