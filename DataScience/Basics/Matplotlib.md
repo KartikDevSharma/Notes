@@ -196,3 +196,178 @@ plt.show()
 
 ---
 
+# **📊 Multiple Graphs in One Figure (Absolute Beginner Guide)**  
+
+## **What Does "Multiple Graphs in One Figure" Mean?**  
+🔹 Sometimes, you need to compare different graphs **side by side** instead of making separate figures.  
+🔹 Matplotlib lets you **put multiple graphs in the same window** using **`plt.subplot()`**.  
+
+✅ **This is useful when you want to:**  
+- Compare **two different data trends** at once.  
+- Show **different visualizations** of the same data (e.g., **Line Chart vs. Bar Chart**).  
+- Save space by **grouping multiple plots together**.  
+
+---
+
+## **1️⃣ The Basic Idea: `plt.subplot()`**
+`plt.subplot(rows, columns, plot_number)`
+
+📌 **Breaking it Down:**  
+1. **Rows (`rows`)** → How many rows of graphs do you want?  
+2. **Columns (`columns`)** → How many columns of graphs do you want?  
+3. **Plot Number (`plot_number`)** → Which graph are you working on?  
+
+👉 Think of it as **a grid of plots** where you "fill" each slot one by one.
+
+---
+
+## **2️⃣ Simple Example: Two Graphs (One Row, Two Columns)**  
+**🎯 Goal:** Show **sales data** using both **Line Chart and Bar Chart** in the same figure.
+
+```python
+import matplotlib.pyplot as plt
+
+# Data
+months = ["Jan", "Feb", "Mar", "Apr", "May"]
+sales = [10, 15, 7, 12, 18]
+
+plt.figure(figsize=(10, 5))  # Set figure size
+
+# First Plot (Line Chart)
+plt.subplot(1, 2, 1)  # 1 row, 2 columns, this is the first plot
+plt.plot(months, sales, color='blue', marker='o')
+plt.title("Sales Trend (Line Chart)")
+plt.xlabel("Months")
+plt.ylabel("Sales ($1000s)")
+
+# Second Plot (Bar Chart)
+plt.subplot(1, 2, 2)  # 1 row, 2 columns, this is the second plot
+plt.bar(months, sales, color='red')
+plt.title("Sales Data (Bar Chart)")
+plt.xlabel("Months")
+plt.ylabel("Sales ($1000s)")
+
+plt.tight_layout()  # Adjust layout to prevent overlap
+plt.show()
+```
+
+---
+
+### **💡 What’s Happening Here?**
+✅ `plt.figure(figsize=(10,5))` → Sets the **size of the whole figure**.  
+✅ `plt.subplot(1, 2, 1)` → **1 row, 2 columns**, this is **plot 1**.  
+✅ `plt.subplot(1, 2, 2)` → **1 row, 2 columns**, this is **plot 2**.  
+✅ `plt.tight_layout()` → **Fixes overlapping labels automatically.**  
+✅ `plt.show()` → **Displays everything in one window!**  
+
+---
+
+## **3️⃣ Arranging Graphs in Rows and Columns**
+Sometimes, you need more than **two** graphs. You can use **multiple rows and columns**.
+
+---
+
+### **Example: 2 Rows, 2 Columns (4 Graphs)**
+```python
+import matplotlib.pyplot as plt
+
+# Data
+x = [1, 2, 3, 4, 5]
+y1 = [10, 20, 30, 40, 50]
+y2 = [5, 15, 25, 35, 45]
+y3 = [2, 4, 6, 8, 10]
+y4 = [3, 6, 9, 12, 15]
+
+plt.figure(figsize=(10, 8))  # Set figure size
+
+# First plot (Line Chart)
+plt.subplot(2, 2, 1)  # 2 rows, 2 columns, 1st plot
+plt.plot(x, y1, color='blue')
+plt.title("Plot 1: Line Chart")
+
+# Second plot (Bar Chart)
+plt.subplot(2, 2, 2)  # 2 rows, 2 columns, 2nd plot
+plt.bar(x, y2, color='green')
+plt.title("Plot 2: Bar Chart")
+
+# Third plot (Scatter Plot)
+plt.subplot(2, 2, 3)  # 2 rows, 2 columns, 3rd plot
+plt.scatter(x, y3, color='red')
+plt.title("Plot 3: Scatter Plot")
+
+# Fourth plot (Histogram)
+plt.subplot(2, 2, 4)  # 2 rows, 2 columns, 4th plot
+plt.hist(y4, bins=5, color='purple')
+plt.title("Plot 4: Histogram")
+
+plt.tight_layout()
+plt.show()
+```
+
+---
+
+### **💡 What’s Happening Here?**
+✅ `plt.subplot(2, 2, 1)` → **1st plot in a 2x2 grid**.  
+✅ `plt.subplot(2, 2, 2)` → **2nd plot in a 2x2 grid**.  
+✅ `plt.subplot(2, 2, 3)` → **3rd plot in a 2x2 grid**.  
+✅ `plt.subplot(2, 2, 4)` → **4th plot in a 2x2 grid**.  
+✅ **Each graph has a different type (Line, Bar, Scatter, Histogram).**  
+
+🔹 **This creates a 2x2 grid of graphs like this:**  
+```
+[ Plot 1 ]  [ Plot 2 ]
+[ Plot 3 ]  [ Plot 4 ]
+```
+
+---
+
+## **4️⃣ Adjusting Spacing Between Graphs**
+🔹 If graphs **overlap**, use `plt.tight_layout()`.  
+🔹 If you want **more control**, use `plt.subplots_adjust()`.  
+
+```python
+plt.subplots_adjust(left=0.1, right=0.9, top=0.9, bottom=0.1, wspace=0.3, hspace=0.5)
+```
+✅ **`wspace` (width space)** → Adds space between columns.  
+✅ **`hspace` (height space)** → Adds space between rows.  
+
+---
+
+## **5️⃣ Using `plt.subplots()` Instead of `plt.subplot()`**
+🔹 `plt.subplots()` is a **better alternative** to `plt.subplot()` because it **returns figure & axes** for more flexibility.
+
+```python
+fig, axes = plt.subplots(2, 2, figsize=(10, 8))
+
+# First plot
+axes[0, 0].plot(x, y1, color='blue')
+axes[0, 0].set_title("Plot 1: Line Chart")
+
+# Second plot
+axes[0, 1].bar(x, y2, color='green')
+axes[0, 1].set_title("Plot 2: Bar Chart")
+
+# Third plot
+axes[1, 0].scatter(x, y3, color='red')
+axes[1, 0].set_title("Plot 3: Scatter Plot")
+
+# Fourth plot
+axes[1, 1].hist(y4, bins=5, color='purple')
+axes[1, 1].set_title("Plot 4: Histogram")
+
+plt.tight_layout()
+plt.show()
+```
+✅ This method makes it **easier to modify each graph individually**.
+
+---
+
+## **💡 Summary: How to Remember This?**
+1️⃣ **Use `plt.subplot(rows, columns, plot_number)` to position each graph.**  
+2️⃣ **Always use `plt.tight_layout()` to fix overlapping issues.**  
+3️⃣ **Use `plt.subplots()` if you need more control.**  
+4️⃣ **Use `plt.subplots_adjust()` if you want to fine-tune spacing.**  
+5️⃣ **Practice!** Start by making 2 plots, then try 4.  
+
+---
+
