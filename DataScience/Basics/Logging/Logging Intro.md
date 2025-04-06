@@ -236,3 +236,321 @@ def divide(a, b):
 
 ---
 
+---
+
+Perfect, Kartik! You're now getting into more **real-world logging setups** — using **multiple loggers** is a very practical and *interview-worthy* skill, especially in **bigger projects or pipelines** (like data science, ML, APIs, etc.).
+
+Let’s break this down in the **simplest and most memorable way**, and by the end you’ll be able to confidently say:
+
+> *“I know how to create and manage multiple loggers, customize their outputs, and control log levels separately for different parts of my code.”*
+
+---
+
+# 🎯 Why Use Multiple Loggers?
+
+When your codebase grows, you **don’t want all logs mixed together**.  
+Instead, you want:
+
+- `data_logger` for logging dataset issues  
+- `model_logger` for logging training steps  
+- `api_logger` for logging requests/errors  
+- ...all writing to different files or with different rules
+
+---
+
+# 🛠️ Step-by-Step: Using Multiple Loggers in Python
+
+Let’s build a real-world simulation:
+
+✅ Logger for data loading  
+✅ Logger for model training  
+✅ Each writes to a separate log file  
+✅ Different formats and levels
+
+---
+
+## 📁 Project Structure (Mental Map)
+
+```plaintext
+project/
+│
+├── main.py
+├── data_utils.py   # has data_logger
+└── model_utils.py  # has model_logger
+```
+
+---
+
+## ✅ Step 1: Create Custom Loggers
+
+### 🔹 data_utils.py
+
+```python
+import logging
+
+# Create a logger for data tasks
+data_logger = logging.getLogger("data_logger")
+data_logger.setLevel(logging.INFO)
+
+# File handler for writing logs to file
+data_file = logging.FileHandler("data.log")
+data_format = logging.Formatter('%(asctime)s - DATA - %(levelname)s - %(message)s')
+data_file.setFormatter(data_format)
+
+data_logger.addHandler(data_file)
+
+def load_data():
+    data_logger.info("Loading data started...")
+    try:
+        # Simulated loading
+        x = [1, 2, 3]
+        data_logger.info("Data loaded successfully.")
+        return x
+    except Exception as e:
+        data_logger.error(f"Error loading data: {e}")
+```
+
+---
+
+### 🔹 model_utils.py
+
+```python
+import logging
+
+# Create a logger for model tasks
+model_logger = logging.getLogger("model_logger")
+model_logger.setLevel(logging.DEBUG)
+
+# File handler for model logs
+model_file = logging.FileHandler("model.log")
+model_format = logging.Formatter('%(asctime)s - MODEL - %(levelname)s - %(message)s')
+model_file.setFormatter(model_format)
+
+model_logger.addHandler(model_file)
+
+def train_model(data):
+    model_logger.info("Training started...")
+    try:
+        for epoch in range(3):
+            model_logger.debug(f"Epoch {epoch + 1} - processing data: {data}")
+        model_logger.info("Model trained successfully.")
+    except Exception as e:
+        model_logger.critical(f"Training failed: {e}")
+```
+
+---
+
+## ✅ Step 2: Use Both in main.py
+
+```python
+from data_utils import load_data
+from model_utils import train_model
+
+data = load_data()
+train_model(data)
+```
+
+Now when you run `main.py`, you'll get two log files:
+
+- `data.log` — only has logs related to data
+- `model.log` — only has logs related to training
+
+---
+
+## 🧠 Summary: What's Happening?
+
+| Concept        | What You Did                              |
+|----------------|--------------------------------------------|
+| Custom logger  | `logging.getLogger("name")`                |
+| File handler   | `logging.FileHandler()` writes to file     |
+| Formatter      | Controls log line appearance               |
+| Separate files | Each logger logs to its own `.log` file    |
+| Levels         | You can set different `setLevel()` for each|
+
+---
+
+## 🧠 Bonus Tip: Logging to Console + File at Same Time
+
+You can add **both a `FileHandler` and `StreamHandler`**:
+
+```python
+console_handler = logging.StreamHandler()
+console_handler.setFormatter(logging.Formatter('%(levelname)s: %(message)s'))
+
+logger.addHandler(console_handler)
+```
+
+Now, logs show up in the terminal *and* save to file.
+
+---
+
+## 🎤 Interview Answer Template
+
+> “In large applications, I create multiple loggers with unique names using `getLogger()`, like `data_logger`, `model_logger`, etc. Each logger can have its own level, handler (file or console), and formatter. This helps in keeping logs organized and debugging easier. For example, in one project I used separate logs for data processing, model training, and API errors, which made tracking issues much cleaner.”
+
+---
+Absolutely, Kartik! Let's walk through a **real-world logging example** in a **data science pipeline** — the kind you might actually build or work on during an internship or job.
+
+We’ll simulate a basic workflow:
+
+---
+
+## 🧪 Scenario: You're Building a Data Science Pipeline
+
+Your pipeline has the following steps:
+
+1. Load data from a CSV file  
+2. Clean the data  
+3. Train a dummy model  
+4. Save the trained model  
+
+You want to **log every major step**, **handle errors**, and **track progress** in a clean and structured way.
+
+---
+
+## 🧱 Project Layout
+
+Everything in a single script for simplicity:
+
+```plaintext
+pipeline.py
+```
+
+---
+
+## 📄 Full Code with Logging (Beginner-Friendly)
+
+```python
+import logging
+import pandas as pd
+import pickle
+from sklearn.linear_model import LinearRegression
+
+# -------------------------------
+# 🔧 Step 1: Setup the Logger
+# -------------------------------
+logging.basicConfig(
+    filename='pipeline.log',
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+
+# -------------------------------
+# 🧹 Step 2: Load and Clean Data
+# -------------------------------
+def load_data(filepath):
+    logging.info(f"Trying to load data from {filepath}")
+    try:
+        df = pd.read_csv(filepath)
+        logging.info(f"Loaded data successfully with shape {df.shape}")
+        return df
+    except FileNotFoundError:
+        logging.error(f"File {filepath} not found.")
+    except Exception as e:
+        logging.critical(f"Unexpected error while loading data: {e}")
+
+def clean_data(df):
+    logging.info("Starting data cleaning...")
+    try:
+        df_cleaned = df.dropna()
+        logging.info(f"Removed missing values. New shape: {df_cleaned.shape}")
+        return df_cleaned
+    except Exception as e:
+        logging.error(f"Data cleaning failed: {e}")
+        return df
+
+# -------------------------------
+# 🧠 Step 3: Train a Dummy Model
+# -------------------------------
+def train_model(df):
+    logging.info("Starting model training...")
+    try:
+        X = df[['feature1']]  # assume one feature
+        y = df['target']      # assume target column
+        model = LinearRegression()
+        model.fit(X, y)
+        logging.info("Model training completed.")
+        return model
+    except Exception as e:
+        logging.critical(f"Model training failed: {e}")
+
+# -------------------------------
+# 💾 Step 4: Save Model to Disk
+# -------------------------------
+def save_model(model, filename='model.pkl'):
+    try:
+        with open(filename, 'wb') as f:
+            pickle.dump(model, f)
+        logging.info(f"Model saved to {filename}")
+    except Exception as e:
+        logging.error(f"Failed to save model: {e}")
+
+# -------------------------------
+# 🚀 Step 5: Main Pipeline
+# -------------------------------
+def main():
+    logging.info("Pipeline started.")
+    
+    df = load_data("data.csv")  # this file must exist
+    if df is None:
+        logging.critical("Stopping pipeline due to data load failure.")
+        return
+
+    df_clean = clean_data(df)
+    model = train_model(df_clean)
+    
+    if model:
+        save_model(model)
+    
+    logging.info("Pipeline completed.")
+
+if __name__ == "__main__":
+    main()
+```
+
+---
+
+## 📘 What You Learn From This Example
+
+### 🔹 Logging Real Steps
+Each real step (`load`, `clean`, `train`, `save`) is logged.
+
+### 🔹 Logging Errors Properly
+If anything fails, it's **not crashing blindly** — the error is logged, and the pipeline continues or stops as needed.
+
+### 🔹 File Logging
+All logs are stored in `pipeline.log` for later review, useful for debugging or auditing.
+
+### 🔹 Good Practices
+- Using `try-except` blocks around risky operations
+- Logging **start and end** of each function
+- Including **data shapes** to track progress
+
+---
+
+## 📁 Sample Log Output
+
+```log
+2025-04-04 20:03:55,092 - INFO - Pipeline started.
+2025-04-04 20:03:55,093 - INFO - Trying to load data from data.csv
+2025-04-04 20:03:55,152 - INFO - Loaded data successfully with shape (1000, 2)
+2025-04-04 20:03:55,153 - INFO - Starting data cleaning...
+2025-04-04 20:03:55,154 - INFO - Removed missing values. New shape: (950, 2)
+2025-04-04 20:03:55,156 - INFO - Starting model training...
+2025-04-04 20:03:55,158 - INFO - Model training completed.
+2025-04-04 20:03:55,159 - INFO - Model saved to model.pkl
+2025-04-04 20:03:55,160 - INFO - Pipeline completed.
+```
+
+---
+
+This is the kind of logging setup you can **easily use in real data science projects**, even when you scale up to:
+
+- Jupyter notebooks
+- Training loops
+- APIs
+- Cloud jobs (e.g. AWS Lambda, GCP, Airflow)
+
+---
+
+
