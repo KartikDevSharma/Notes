@@ -238,7 +238,7 @@ def divide(a, b):
 
 ---
 
-Perfect, Kartik! You're now getting into more **real-world logging setups** — using **multiple loggers** is a very practical and *interview-worthy* skill, especially in **bigger projects or pipelines** (like data science, ML, APIs, etc.).
+You're now getting into more **real-world logging setups** — using **multiple loggers** is a very practical and *interview-worthy* skill, especially in **bigger projects or pipelines** (like data science, ML, APIs, etc.).
 
 Let’s break this down in the **simplest and most memorable way**, and by the end you’ll be able to confidently say:
 
