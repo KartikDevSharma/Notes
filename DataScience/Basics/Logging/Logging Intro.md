@@ -389,7 +389,7 @@ Now, logs show up in the terminal *and* save to file.
 > “In large applications, I create multiple loggers with unique names using `getLogger()`, like `data_logger`, `model_logger`, etc. Each logger can have its own level, handler (file or console), and formatter. This helps in keeping logs organized and debugging easier. For example, in one project I used separate logs for data processing, model training, and API errors, which made tracking issues much cleaner.”
 
 ---
-Absolutely, Kartik! Let's walk through a **real-world logging example** in a **data science pipeline** — the kind you might actually build or work on during an internship or job.
+A **real-world logging example** in a **data science pipeline** — the kind you might actually build or work on during an internship or job.
 
 We’ll simulate a basic workflow:
 
